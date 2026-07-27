@@ -1,0 +1,12 @@
+.expo
+.DS_Store
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+!.env.template
+/package-lock.json
+/whatsapp-cloud-api/
+google-service-account.json
