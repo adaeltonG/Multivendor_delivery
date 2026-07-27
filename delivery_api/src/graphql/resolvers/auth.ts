@@ -114,8 +114,9 @@ export const authResolvers = {
       args: { username?: string; password?: string; notificationToken?: string }
     ) {
       if (!args.username || !args.password) badUserInput('Username and password are required')
+      const identity = args.username.trim().toLowerCase()
       const rider = await Rider.findOne({
-        username: args.username.toLowerCase(),
+        $or: [{ username: identity }, { email: identity }],
         isActive: true
       }).select('+password')
       if (!rider || !(await comparePassword(args.password, String(rider.password)))) {

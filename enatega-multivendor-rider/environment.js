@@ -9,15 +9,15 @@ const getEnvVars = (env = Updates.releaseChannel) => {
 
   if (env === 'production' || env === 'staging') {
     return {
-      GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+      GRAPHQL_URL: 'https://zetahub.co.uk/api/graphql',
+      WS_GRAPHQL_URL: 'wss://zetahub.co.uk/api/graphql',
       SENTRY_DSN: configuration.riderAppSentryUrl,
       GOOGLE_MAPS_KEY: configuration.googleApiKey
     }
   }
   return {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    GRAPHQL_URL: 'https://zetahub.co.uk/api/graphql',
+    WS_GRAPHQL_URL: 'wss://zetahub.co.uk/api/graphql',
     SENTRY_DSN: configuration.riderAppSentryUrl,
     GOOGLE_MAPS_KEY: configuration.googleApiKey
     // SENTRY_DSN:

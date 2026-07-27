@@ -72,13 +72,8 @@ const useLogin = () => {
     }
   }
   function onError(error) {
-    let message = 'Check internet connection'
-    console.log("going in")
-    try {
-      message = error.message
-    } catch (error) {}
-    setUsername('')
-    setPassword('')
+    const message = error?.message || t('checkInternet')
+    FlashMessage({ message })
   }
 
   async function onSubmit() {
@@ -112,11 +107,21 @@ const useLogin = () => {
             Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
-        notificationToken = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig.extra.eas.projectId
-          })
-        ).data
+        try {
+          const projectId =
+            Constants.expoConfig?.extra?.eas?.projectId ||
+            Constants.easConfig?.projectId
+          if (projectId) {
+            notificationToken = (
+              await Notifications.getExpoPushTokenAsync({ projectId })
+            ).data
+          }
+        } catch (error) {
+          console.warn(
+            'Push notifications are unavailable; continuing login without a token.',
+            error?.message || error
+          )
+        }
       }
 
       // Perform mutation with the obtained data
