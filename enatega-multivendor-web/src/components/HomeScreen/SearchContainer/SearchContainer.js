@@ -152,6 +152,8 @@ function SearchContainer({
   };
 
   const { restaurants } = data?.nearByRestaurants ?? {};
+  const mapsAvailable = Boolean(window.google?.maps);
+
   return (
     <div style={{ position: "relative", width: "100%" }}>
       <Grid container className={classes.mainContainer}>
@@ -163,7 +165,7 @@ function SearchContainer({
         />
         <Grid className={classes.temp}>
           
-          {map && (
+          {map && mapsAvailable && (
             <GoogleMap
               mapContainerStyle={{
                 height: "100%",
