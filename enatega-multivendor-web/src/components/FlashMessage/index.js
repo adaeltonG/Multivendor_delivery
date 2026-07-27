@@ -4,12 +4,17 @@ import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 function FlashMessage(props) {
+  const message =
+    typeof props.alertMessage === "string"
+      ? props.alertMessage
+      : props.alertMessage?.message || String(props.alertMessage || "");
+
   return (
     <Snackbar
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       open={props.open}
       onClose={props.handleClose}
-      message={props.alertMessage}
+      message={message}
       autoHideDuration={!props.alive ? 5000 : undefined}
       key={`${props.message} top`}
       action={
