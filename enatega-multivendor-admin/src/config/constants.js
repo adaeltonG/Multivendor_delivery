@@ -4,10 +4,10 @@ import ConfigurationContext from '../context/Configuration'
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
 
-  const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
-  const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
-  // const SERVER_URL = 'http://localhost:8001'
-  // const WS_SERVER_URL = 'ws://localhost:8001'
+  const SERVER_URL =
+    process.env.REACT_APP_SERVER_URL || 'https://zetahub.co.uk/api'
+  const WS_SERVER_URL =
+    process.env.REACT_APP_WS_SERVER_URL || 'wss://zetahub.co.uk/api'
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
   const FIREBASE_KEY = configuration.firebaseKey
   const APP_ID = configuration.appId

@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Enatega MultiVendor dashboard",
   "main": "index.js",
-  "homepage": "https://multivendor-admin.ninjascode.com/",
+  "homepage": "/admin",
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts --openssl-legacy-provider start",

@@ -107,12 +107,14 @@ const App = () => {
             var notificationTitle = 'New Order on Enatega Multivendor'
             var notificationOptions = {
               body: payload.data.orderid,
-              icon: 'https://multivendor-admin.ninjascode.com/favicon.png'
+              icon: `${window.location.origin}${process.env.PUBLIC_URL}/favicon.png`
             }
             const nt = new Notification(notificationTitle, notificationOptions)
             nt.onclick = function(event) {
               event.preventDefault() // prevent the browser from focusing the Notification's tab
-              window.open('https://multivendor-admin.ninjascode.com/dashboard')
+              window.open(
+                `${window.location.origin}${process.env.PUBLIC_URL}/#/super_admin/dashboard`
+              )
               nt.close()
             }
           })
@@ -167,7 +169,7 @@ const App = () => {
               maxWidth: { xs: '100px', sm: '200px', md: '300px' }
             }}
             alt="No internet"
-            src="/nointernet.svg"
+            src={`${process.env.PUBLIC_URL}/nointernet.svg`}
           />
           <Typography
             variant="body"

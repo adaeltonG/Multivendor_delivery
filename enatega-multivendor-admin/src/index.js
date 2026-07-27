@@ -23,6 +23,17 @@ import theme from './utils/theme'
 
 function Main() {
   const { SERVER_URL, WS_SERVER_URL } = ConfigurableValues()
+  const getAuthorization = () => {
+    const data = localStorage.getItem('user-enatega')
+    if (!data) return ''
+
+    try {
+      const token = JSON.parse(data).token
+      return token ? `Bearer ${token}` : ''
+    } catch {
+      return ''
+    }
+  }
 
   const cache = new InMemoryCache()
   const httpLink = createHttpLink({
@@ -31,19 +42,16 @@ function Main() {
   const wsLink = new WebSocketLink({
     uri: `${WS_SERVER_URL}/graphql`,
     options: {
-      reconnect: true
+      reconnect: true,
+      connectionParams: () => ({
+        authorization: getAuthorization()
+      })
     }
   })
   const request = async operation => {
-    const data = localStorage.getItem('user-enatega')
-
-    let token = null
-    if (data) {
-      token = JSON.parse(data).token
-    }
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : ''
+        authorization: getAuthorization()
       }
     })
   }
