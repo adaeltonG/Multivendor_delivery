@@ -8,13 +8,13 @@ import React, {
 } from 'react'
 import {
   View,
-  SafeAreaView,
   TouchableOpacity,
   Animated,
   StatusBar,
   Platform,
   RefreshControl
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   MaterialIcons,
   SimpleLineIcons,

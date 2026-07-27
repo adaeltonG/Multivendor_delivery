@@ -299,8 +299,8 @@ function ImageTextCenterHeader(props, ref) {
                           spinnerColor={currentTheme.iconColorDark}
                         />
                       ) : (
-                        <AntDesign
-                          name={heart ? 'heart' : 'hearto'}
+                        <Ionicons
+                          name={heart ? 'heart' : 'heart-outline'}
                           size={scale(15)}
                           color={currentTheme.newIconColor}
                         />

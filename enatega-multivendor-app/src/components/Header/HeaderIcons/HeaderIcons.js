@@ -57,7 +57,13 @@ function BackButton(props) {
       <MaterialIcons name='my-location' size={16} color={props.iconColor} />
     )
   } else if (props.icon === 'fav') {
-    return <AntDesign name='hearto' size={20} color={props.iconColorDark} />
+    return (
+      <Ionicons
+        name='heart-outline'
+        size={20}
+        color={props.iconColorDark}
+      />
+    )
   } else {
     return (
       <EvilIcons

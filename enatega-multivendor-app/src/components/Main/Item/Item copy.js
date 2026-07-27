@@ -86,8 +86,8 @@ function Item(props) {
                 {loadingMutation ? (
                   <Spinner size={'small'} backColor={'transparent'} />
                 ) : (
-                  <AntDesign
-                    name={heart ? 'heart' : 'hearto'}
+                  <Ionicons
+                    name={heart ? 'heart' : 'heart-outline'}
                     size={scale(15)}
                     color="black"
                   />

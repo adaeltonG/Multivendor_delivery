@@ -88,7 +88,9 @@ function SidebBar(props) {
                 style={styles().iconContainer}
                 onPress={async () => {
                   if (dataItem.isAuth && !isLoggedIn) {
-                    props.navigation.navigate('CreateAccount')
+                    props.navigation.navigate('NoDrawer', {
+                      screen: 'CreateAccount'
+                    })
                   } else {
                     props.navigation.navigate(dataItem.navigateTo)
                   }

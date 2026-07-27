@@ -4,9 +4,9 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Modal,
-  SafeAreaView
+  Modal
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons, AntDesign } from '@expo/vector-icons'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'

@@ -1,6 +1,6 @@
 import { connectDatabase, disconnectDatabase } from '../config/database.js'
 import { logger } from '../config/logger.js'
-import { Zone } from '../models/index.js'
+import { Restaurant, Rider, Zone } from '../models/index.js'
 
 async function migrate() {
   await connectDatabase()
@@ -39,6 +39,19 @@ async function migrate() {
       updatedZones: zones.modifiedCount
     },
     'Legacy data migration completed'
+  )
+
+  await Promise.all([
+    Restaurant.createIndexes(),
+    Rider.createIndexes(),
+    Zone.createIndexes()
+  ])
+
+  logger.info(
+    {
+      models: ['Restaurant', 'Rider', 'Zone']
+    },
+    'Production database indexes created'
   )
 }
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { View, TouchableOpacity, Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as Updates from 'expo-updates'
 import * as Localization from 'expo-localization'
 import styles from './styles'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -54,7 +53,6 @@ function Language() {
     const languageInd = activeRadio
     const lang = languageTypes[languageInd].code
     i18next.changeLanguage(lang)
-    console.log(lang)
     if (Platform.OS === 'android') {
       const localization = await Localization.getLocalizationAsync()
       localization.locale = languageTypes[languageInd].code

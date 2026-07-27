@@ -8,7 +8,6 @@ import React, {
 } from 'react'
 import {
   View,
-  SafeAreaView,
   TouchableOpacity,
   Animated,
   StatusBar,
@@ -18,6 +17,7 @@ import {
   FlatList,
   ScrollView
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { Modalize } from 'react-native-modalize'
 import {
   MaterialIcons,

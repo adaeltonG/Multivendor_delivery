@@ -47,7 +47,7 @@ function setupApolloClient() {
     options: {
       reconnect: true,
       lazy: true,
-      connectionParams: async () => {
+      connectionParams: async() => {
         const token = await AsyncStorage.getItem('rider-token')
         return {
           authorization: token ? `Bearer ${token}` : ''

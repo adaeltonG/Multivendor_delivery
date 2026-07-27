@@ -12,9 +12,9 @@ const useEnvVars = (env = Updates.channel) => {
 
   if (env === 'production' || env === 'staging') {
     return {
-      GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-      SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+      GRAPHQL_URL: 'https://zetahub.co.uk/api/graphql',
+      WS_GRAPHQL_URL: 'wss://zetahub.co.uk/api/graphql',
+      SERVER_URL: 'https://zetahub.co.uk/api/',
       IOS_CLIENT_ID_GOOGLE: configuration.iOSClientID,
       ANDROID_CLIENT_ID_GOOGLE: configuration.androidClientID,
       AMPLITUDE_API_KEY: configuration.appAmplitudeApiKey,
@@ -29,9 +29,9 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+    GRAPHQL_URL: 'https://zetahub.co.uk/api/graphql',
+    WS_GRAPHQL_URL: 'wss://zetahub.co.uk/api/graphql',
+    SERVER_URL: 'https://zetahub.co.uk/api/',
     // GRAPHQL_URL: 'http://10.97.25.37:8001/graphql',
     // WS_GRAPHQL_URL: 'ws://10.97.25.37:8001/graphql',
     // SERVER_URL: 'http://10.97.25.37:8001/',

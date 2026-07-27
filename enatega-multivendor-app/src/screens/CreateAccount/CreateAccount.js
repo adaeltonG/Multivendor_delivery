@@ -24,6 +24,7 @@ const CreateAccount = (props) => {
     navigateToLogin,
     navigation,
     signIn,
+    googleAuthConfigured,
     //user
   } = useCreateAccount()
   const { t } = useTranslation()
@@ -156,7 +157,11 @@ const CreateAccount = (props) => {
             </TextDefault>
           </View>
 
-          <View style={{ marginBottom: scale(5) }}>{renderGoogleAction()}</View>
+          {googleAuthConfigured && (
+            <View style={{ marginBottom: scale(5) }}>
+              {renderGoogleAction()}
+            </View>
+          )}
           {enableApple && (
             <View style={{ marginBottom: scale(5) }}>
               {renderAppleAction()}

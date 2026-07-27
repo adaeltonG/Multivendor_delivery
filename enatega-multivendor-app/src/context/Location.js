@@ -11,8 +11,22 @@ const GET_CITIES = gql`
 
 export const LocationContext = createContext()
 
+// Temporary development fallback. This lets the app open without forcing the
+// address-selection flow. A stored or newly selected address replaces it.
+const TEMPORARY_LOCATION = {
+  label: 'Current area',
+  deliveryAddress: 'Location not set',
+  latitude: 51.5074,
+  longitude: -0.1278,
+  isTemporary: true
+}
+const REQUIRE_ADDRESS_ON_START =
+  process.env.EXPO_PUBLIC_REQUIRE_ADDRESS_ON_START === 'true'
+
 export const LocationProvider = ({ children }) => {
-  const [location, setLocation] = useState(null)
+  const [location, setLocation] = useState(
+    REQUIRE_ADDRESS_ON_START ? null : TEMPORARY_LOCATION
+  )
   const [country, setCountry] = useState('IL')
   const [cities, setCities] = useState([])
   const [loadingCountry, setLoadingCountry] = useState(true)
@@ -34,7 +48,7 @@ export const LocationProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (location) {
+    if (location && !location.isTemporary) {
       const saveLocation = async () => {
         await AsyncStorage.setItem('location', JSON.stringify(location))
       }

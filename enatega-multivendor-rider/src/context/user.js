@@ -40,7 +40,6 @@ export const UserProvider = props => {
     data: dataProfile
   } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
-    onCompleted,
     pollInterval: 10000,
     onError: error1
   })
@@ -54,28 +53,27 @@ export const UserProvider = props => {
     subscribeToMore,
     refetch: refetchAssigned
   } = useQuery(RIDER_ORDERS, {
-    onCompleted,
     onError: error2,
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true
     // pollInterval: 15000
   })
 
-  let unsubscribeZoneOrder = null
-  let unsubscribeAssignOrder = null
+  const riderId = dataProfile?.rider?._id
+  const zoneId = dataProfile?.rider?.zone?._id
 
   useEffect(() => {
-    if (!dataProfile) return
-    {
-      const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders()
-      unsubscribeZoneOrder = unsubZoneOrder
-      unsubscribeAssignOrder = unsubAssignOrder
-    }
+    if (!riderId || !zoneId) return
+    const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders(
+      riderId,
+      zoneId
+    )
+
     return () => {
-      unsubscribeZoneOrder && unsubscribeZoneOrder()
-      unsubscribeAssignOrder && unsubscribeAssignOrder()
+      unsubZoneOrder?.()
+      unsubAssignOrder?.()
     }
-  }, [dataProfile])
+  }, [riderId, zoneId, subscribeToMore])
 
   useEffect(() => {
     const trackRiderLocation = async() => {
@@ -98,12 +96,6 @@ export const UserProvider = props => {
     }
   }, [locationPermission])
 
-  function onCompleted({ rider, assignedOrders }) {
-    console.log(rider)
-    console.log(assignedOrders)
-    console.log('onCompleted context')
-  }
-
   function error1(error) {
     console.log('error on fetching context 1', JSON.stringify(error))
   }
@@ -111,13 +103,13 @@ export const UserProvider = props => {
     console.log('error on fetching context 2', JSON.stringify(error))
   }
 
-  const subscribeNewOrders = () => {
+  const subscribeNewOrders = (currentRiderId, currentZoneId) => {
     try {
       const unsubAssignOrder = subscribeToMore({
         document: gql`
           ${subscriptionAssignRider}
         `,
-        variables: { riderId: dataProfile.rider._id },
+        variables: { riderId: currentRiderId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev
           if (subscriptionData.data.subscriptionAssignRider.origin === 'new') {
@@ -145,7 +137,7 @@ export const UserProvider = props => {
       })
       const unsubZoneOrder = subscribeToMore({
         document: SUBSCRIPTION_UNASSIGNED_ORDER,
-        variables: { zoneId: dataProfile.rider.zone._id },
+        variables: { zoneId: currentZoneId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev
 
@@ -175,7 +167,7 @@ export const UserProvider = props => {
         loadingAssigned,
         errorAssigned,
         assignedOrders:
-          loadingAssigned || errorAssigned ? [] : dataAssigned.riderOrders,
+          loadingAssigned || errorAssigned ? [] : dataAssigned?.riderOrders ?? [],
         refetchAssigned,
         networkStatusAssigned,
         requestForegroundPermissionsAsync

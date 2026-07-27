@@ -25,14 +25,14 @@ export const SoundContextProvider = ({ children }) => {
       else stopSound()
     }
   }, [assignedOrders])
-  const playSound = async () => {
+  const playSound = async() => {
     if (active === 'NewOrders') {
       await stopSound()
       player.loop = true
       player.play()
     }
   }
-  const stopSound = async () => {
+  const stopSound = async() => {
     player.pause()
     await player.seekTo(0)
   }

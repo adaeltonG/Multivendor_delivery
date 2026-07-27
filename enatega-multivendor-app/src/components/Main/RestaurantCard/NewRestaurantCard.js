@@ -9,8 +9,8 @@ import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
 import {
-  AntDesign,
   FontAwesome5,
+  Ionicons,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
@@ -75,8 +75,8 @@ function NewRestaurantCard(props) {
                 {loadingMutation ? (
                   <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} />
                 ) : (
-                  <AntDesign
-                    name={heart ? 'heart' : 'hearto'}
+                  <Ionicons
+                    name={heart ? 'heart' : 'heart-outline'}
                     size={scale(15)}
                     color={currentTheme.iconColor}
                   />

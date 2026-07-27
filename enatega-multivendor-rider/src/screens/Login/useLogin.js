@@ -52,7 +52,6 @@ const useLogin = () => {
   }
 
   async function onCompleted({ riderLogin, lastOrderCreds }) {
-    console.log('onCompleted data')
     if (riderLogin) {
       FlashMessage({ message: t('loginFlashMsg') })
       await AsyncStorage.setItem('rider-id', riderLogin.userId)

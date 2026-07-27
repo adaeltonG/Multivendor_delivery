@@ -38,10 +38,16 @@ export const useCreateAccount = () => {
     TERMS_AND_CONDITIONS,
     PRIVACY_POLICY
   } = useEnvVars()
+  const googleAuthConfigured =
+    Platform.OS === 'ios'
+      ? Boolean(IOS_CLIENT_ID_GOOGLE)
+      : Boolean(ANDROID_CLIENT_ID_GOOGLE)
+  const disabledGoogleClientId =
+    'google-auth-not-configured.apps.googleusercontent.com'
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-    iosClientId: IOS_CLIENT_ID_GOOGLE
+    androidClientId: ANDROID_CLIENT_ID_GOOGLE || disabledGoogleClientId,
+    iosClientId: IOS_CLIENT_ID_GOOGLE || disabledGoogleClientId
   })
 
   const getUserInfo = async (token) => {
@@ -66,6 +72,10 @@ export const useCreateAccount = () => {
   }
 
   const signIn = async () => {
+    if (!googleAuthConfigured) {
+      FlashMessage({ message: 'Google sign-in is not configured yet' })
+      return
+    }
     try {
       loginButtonSetter('Google')
       await promptAsync()
@@ -293,6 +303,7 @@ export const useCreateAccount = () => {
     navigateToMain,
     navigation,
     signIn,
+    googleAuthConfigured,
     user
   }
 }

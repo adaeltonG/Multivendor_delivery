@@ -8,7 +8,6 @@ import React, {
 } from 'react'
 import {
   View,
-  SafeAreaView,
   TouchableOpacity,
   StatusBar,
   Platform,
@@ -17,6 +16,7 @@ import {
   Animated,
   RefreshControl
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   MaterialIcons,
   AntDesign,
