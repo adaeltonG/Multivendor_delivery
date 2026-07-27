@@ -27,7 +27,7 @@ const Zone = props => {
   const [path, setPath] = useState(
     props.zone ? transformPolygon(props.zone.location.coordinates[0]) : []
   )
-  const {PAID_VERSION}=ConfigurableValues()
+  const { PAID_VERSION } = ConfigurableValues()
   const [mutation] = useState(props.zone ? EDIT_ZONE : CREATE_ZONE)
   const [title, setTitle] = useState(props.zone ? props.zone.title : '')
   const [description, setDescription] = useState(
@@ -257,9 +257,11 @@ const Zone = props => {
                     }
                   })
                   // Close the modal after 3 seconds by calling the parent's onClose callback
-                  setTimeout(() => {
-                    props.onClose() // Close the modal
-                  }, 4000)
+                  if (props.onClose) {
+                    setTimeout(() => {
+                      props.onClose()
+                    }, 4000)
+                  }
                 }
               }}>
               {props.zone ? t('Update') : t('Save')}

@@ -20,7 +20,10 @@ const ConfigurableValues = () => {
   const CLOUDINARY_UPLOAD_URL = configuration.cloudinaryUploadUrl
   const CLOUDINARY_FOOD = configuration.cloudinaryApiKey
   const VAPID_KEY = configuration.vapidKey
-  const PAID_VERSION = configuration.isPaidVersion
+  // This deployment includes the complete admin feature set. Keep this
+  // compatibility constant while older views are migrated away from the
+  // upstream paid-version checks.
+  const PAID_VERSION = true
 
   return {
     GOOGLE_MAPS_KEY,

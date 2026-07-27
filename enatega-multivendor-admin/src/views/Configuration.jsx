@@ -23,7 +23,6 @@ import GoogleClientIDConfiguration from '../components/Configuration/GoogleClien
 import WebConfiguration from '../components/Configuration/Web/Web'
 import AppConfigurations from '../components/Configuration/App/App'
 import FirebaseConfiguration from '../components/Configuration/FireBase/FireBase'
-import Configuration1 from './Configuration1'
 
 const GET_CONFIGURATION = gql`
   ${getConfiguration}
@@ -34,21 +33,25 @@ const Configuration = props => {
   )
 
   const { t } = props
+  const configuration = data && data.configuration
 
   return (
     <>
       <Header />
-      {errorQuery && t('Error')}
       {loadingQuery ? (
         t('LoadingDots')
-      ) : data.configuration.isPaidVersion ? (
+      ) : errorQuery ? (
+        <Grid container ml={2} mt={2}>
+          {`${t('Error')}: ${errorQuery.message}`}
+        </Grid>
+      ) : configuration ? (
         <Grid container ml={2} spacing={2}>
           <Grid item sx={12} md={7} lg={7}>
             <EmailConfiguration
-              emailName={data && data.configuration.emailName}
-              email={data && data.configuration.email}
-              password={data && data.configuration.password}
-              enabled={data && data.configuration.enableEmail}
+              emailName={configuration.emailName}
+              email={configuration.email}
+              password={configuration.password}
+              enabled={configuration.enableEmail}
             />
           </Grid>
           <Grid
@@ -60,129 +63,121 @@ const Configuration = props => {
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <StripeConfiguration
-              publishableKey={data && data.configuration.publishableKey}
-              secretKey={data && data.configuration.secretKey}
+              publishableKey={configuration.publishableKey}
+              secretKey={configuration.secretKey}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <PaypalConfiguration
-              clientId={data && data.configuration.clientId}
-              clientSecret={data && data.configuration.clientSecret}
-              sandbox={data && data.configuration.sandbox}
+              clientId={configuration.clientId}
+              clientSecret={configuration.clientSecret}
+              sandbox={configuration.sandbox}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <CurrencyConfiguration
-              currencyCode={data && data.configuration.currency}
-              currencySymbol={data && data.configuration.currencySymbol}
+              currencyCode={configuration.currency}
+              currencySymbol={configuration.currencySymbol}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <DeliveryRateConfiguration
-              deliveryRate={
-                data && data.configuration && data.configuration.deliveryRate
-              }
-              costType={
-                data && data.configuration && data.configuration.costType
-              }
+              deliveryRate={configuration.deliveryRate}
+              costType={configuration.costType}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <TwilioConfiguration
-              twilioAccountSid={data && data.configuration.twilioAccountSid}
-              twilioAuthToken={data && data.configuration.twilioAuthToken}
-              twilioPhoneNumber={data && data.configuration.twilioPhoneNumber}
-              twilioEnabled={data && data.configuration.twilioEnabled}
+              twilioAccountSid={configuration.twilioAccountSid}
+              twilioAuthToken={configuration.twilioAuthToken}
+              twilioPhoneNumber={configuration.twilioPhoneNumber}
+              twilioEnabled={configuration.twilioEnabled}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
-            <Email formEmail={data && data.configuration.formEmail} />
+            <Email formEmail={configuration.formEmail} />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <SendGridConfiguration
-              sendGridApiKey={data && data.configuration.sendGridApiKey}
-              sendGridEnabled={data && data.configuration.sendGridEnabled}
-              sendGridEmail={data && data.configuration.sendGridEmail}
-              sendGridEmailName={data && data.configuration.sendGridEmailName}
-              sendGridPassword={data && data.configuration.sendGridPassword}
+              sendGridApiKey={configuration.sendGridApiKey}
+              sendGridEnabled={configuration.sendGridEnabled}
+              sendGridEmail={configuration.sendGridEmail}
+              sendGridEmailName={configuration.sendGridEmailName}
+              sendGridPassword={configuration.sendGridPassword}
             />
           </Grid>
 
           <Grid item sx={12} md={12} lg={5}>
             <WebConfiguration
-              googleMapLibraries={data && data.configuration.googleMapLibraries}
-              googleColor={data && data.configuration.googleColor}
+              googleMapLibraries={configuration.googleMapLibraries}
+              googleColor={configuration.googleColor}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <SentryConfiguration
-              dashboardSentryUrl={data && data.configuration.dashboardSentryUrl}
-              webSentryUrl={data && data.configuration.webSentryUrl}
-              apiSentryUrl={data && data.configuration.apiSentryUrl}
-              customerAppSentryUrl={
-                data && data.configuration.customerAppSentryUrl
-              }
-              restaurantAppSentryUrl={
-                data && data.configuration.restaurantAppSentryUrl
-              }
-              riderAppSentryUrl={data && data.configuration.riderAppSentryUrl}
+              dashboardSentryUrl={configuration.dashboardSentryUrl}
+              webSentryUrl={configuration.webSentryUrl}
+              apiSentryUrl={configuration.apiSentryUrl}
+              customerAppSentryUrl={configuration.customerAppSentryUrl}
+              restaurantAppSentryUrl={configuration.restaurantAppSentryUrl}
+              riderAppSentryUrl={configuration.riderAppSentryUrl}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <GoogleApiKeyConfiguration
-              googleApiKey={data && data.configuration.googleApiKey}
+              googleApiKey={configuration.googleApiKey}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <CloudinaryConfiguration
-              cloudinaryUploadUrl={
-                data && data.configuration.cloudinaryUploadUrl
-              }
-              cloudinaryApiKey={data && data.configuration.cloudinaryApiKey}
+              cloudinaryUploadUrl={configuration.cloudinaryUploadUrl}
+              cloudinaryApiKey={configuration.cloudinaryApiKey}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <AmplitudeApiKeyConfiguration
-              webAmplitudeApiKey={data && data.configuration.webAmplitudeApiKey}
-              appAmplitudeApiKey={data && data.configuration.appAmplitudeApiKey}
+              webAmplitudeApiKey={configuration.webAmplitudeApiKey}
+              appAmplitudeApiKey={configuration.appAmplitudeApiKey}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <GoogleClientIDConfiguration
-              webClientID={data && data.configuration.webClientID}
-              androidClientID={data && data.configuration.androidClientID}
-              iOSClientID={data && data.configuration.iOSClientID}
-              expoClientID={data && data.configuration.expoClientID}
+              webClientID={configuration.webClientID}
+              androidClientID={configuration.androidClientID}
+              iOSClientID={configuration.iOSClientID}
+              expoClientID={configuration.expoClientID}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <FirebaseConfiguration
-              firebaseKey={data && data.configuration.firebaseKey}
-              authDomain={data && data.configuration.authDomain}
-              projectId={data && data.configuration.projectId}
-              storageBucket={data && data.configuration.storageBucket}
-              msgSenderId={data && data.configuration.msgSenderId}
-              appId={data && data.configuration.appId}
-              measurementId={data && data.configuration.measurementId}
-              vapidKey={data && data.configuration.vapidKey}
+              firebaseKey={configuration.firebaseKey}
+              authDomain={configuration.authDomain}
+              projectId={configuration.projectId}
+              storageBucket={configuration.storageBucket}
+              msgSenderId={configuration.msgSenderId}
+              appId={configuration.appId}
+              measurementId={configuration.measurementId}
+              vapidKey={configuration.vapidKey}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <AppConfigurations
-              termsAndConditions={data && data.configuration.termsAndConditions}
-              privacyPolicy={data && data.configuration.privacyPolicy}
-              testOtp={data && data.configuration.testOtp}
+              termsAndConditions={configuration.termsAndConditions}
+              privacyPolicy={configuration.privacyPolicy}
+              testOtp={configuration.testOtp}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <VerificationConfiguration
-              skipEmailVerification={data.configuration.skipEmailVerification}
-              skipMobileVerification={data.configuration.skipMobileVerification}
+              skipEmailVerification={configuration.skipEmailVerification}
+              skipMobileVerification={configuration.skipMobileVerification}
             />
           </Grid>
         </Grid>
       ) : (
-        <Configuration1 t={t} />
+        <Grid container ml={2} mt={2}>
+          {t('Error')}
+        </Grid>
       )}
     </>
   )
