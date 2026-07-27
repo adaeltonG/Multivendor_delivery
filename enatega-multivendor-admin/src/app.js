@@ -31,8 +31,7 @@ const App = () => {
     APP_ID,
     MEASUREMENT_ID,
     GOOGLE_MAPS_KEY,
-    SENTRY_DSN,
-    SERVER_URL
+    SENTRY_DSN
   } = ConfigurableValues()
 
   const globalClasses = useGlobalStyles()
@@ -143,6 +142,27 @@ const App = () => {
       : '/super_admin/vendors'
     : '/auth/login'
 
+  const dashboardRoutes = (
+    <HashRouter basename="/">
+      <Switch>
+        <AdminPrivateRoute
+          path="/super_admin"
+          component={props => <SuperAdminLayout {...props} />}
+        />
+        <PrivateRoute
+          path="/restaurant"
+          component={props => <RestaurantLayout {...props} />}
+        />
+        <PrivateRoute
+          path="/admin"
+          component={props => <AdminLayout {...props} />}
+        />
+        <Route path="/auth" component={props => <AuthLayout {...props} />} />
+        <Redirect from="/" to={route} />
+      </Switch>
+    </HashRouter>
+  )
+
   return (
     <Sentry.ErrorBoundary>
       {isOffline && (
@@ -193,58 +213,10 @@ const App = () => {
         <>
           {GOOGLE_MAPS_KEY ? (
             <GoogleMapsLoader GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY}>
-              <HashRouter basename="/">
-                <Switch>
-                  <AdminPrivateRoute
-                    path="/super_admin"
-                    component={props => <SuperAdminLayout {...props} />}
-                  />
-                  <PrivateRoute
-                    path="/restaurant"
-                    component={props => <RestaurantLayout {...props} />}
-                  />
-                  <PrivateRoute
-                    path="/admin"
-                    component={props => <AdminLayout {...props} />}
-                  />
-                  <Route
-                    path="/auth"
-                    component={props => <AuthLayout {...props} />}
-                  />
-                  <Redirect from="/" to={route} />
-                </Switch>
-              </HashRouter>
+              {dashboardRoutes}
             </GoogleMapsLoader>
           ) : (
-            !isOffline && (
-              <Box
-                component="div"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                height="100vh"
-                width="100vw"
-                px={3}
-                textAlign="center">
-                <Typography variant="h5">
-                  Dashboard configuration is unavailable
-                </Typography>
-                <Typography variant="body1" mt={1}>
-                  The configured backend did not return the Google Maps
-                  configuration required to start the dashboard.
-                </Typography>
-                <Typography variant="body2" mt={1} color="text.secondary">
-                  Backend: {SERVER_URL}
-                </Typography>
-                <Button
-                  className={globalClasses.button}
-                  onClick={handleRefresh}
-                  style={{ marginTop: '16px' }}>
-                  Retry
-                </Button>
-              </Box>
-            )
+            dashboardRoutes
           )}
         </>
       )}
