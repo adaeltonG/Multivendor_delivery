@@ -215,8 +215,8 @@ export const authResolvers = {
     sendOtpToEmail: () => ({ result: true }),
     sendOtpToPhoneNumber: () => ({ result: true }),
     emailExist: (_parent: unknown, args: { email: string }) =>
-      User.findOne({ email: args.email.toLowerCase() }),
+      User.findOne({ email: args.email.toLowerCase() }).exec(),
     phoneExist: (_parent: unknown, args: { phone: string }) =>
-      User.findOne({ phone: args.phone })
+      User.findOne({ phone: args.phone }).exec()
   }
 }

@@ -199,7 +199,7 @@ export const operationResolvers = {
       return user
     },
     coupon: (_parent: unknown, { coupon }: { coupon: string }) =>
-      Coupon.findOne({ title: coupon.toUpperCase(), enabled: true }),
+      Coupon.findOne({ title: coupon.toUpperCase(), enabled: true }).exec(),
 
     placeOrder: (_parent: unknown, args: never, context: GraphQLContext) =>
       createOrder(args, context),

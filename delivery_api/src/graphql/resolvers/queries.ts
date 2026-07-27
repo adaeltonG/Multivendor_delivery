@@ -66,10 +66,11 @@ async function nearbyRestaurants(latitude?: number, longitude?: number, shopType
 
 export const queryResolvers = {
   Query: {
-    users: () => User.find({ userType: 'CUSTOMER' }).sort({ createdAt: -1 }).limit(500),
+    users: () =>
+      User.find({ userType: 'CUSTOMER' }).sort({ createdAt: -1 }).limit(500).exec(),
     profile: (_parent: unknown, _args: unknown, context: GraphQLContext) => {
       if (!context.user) unauthenticated()
-      return User.findById(context.user.id)
+      return User.findById(context.user.id).exec()
     },
     getCountryByIso: (_parent: unknown, { iso }: { iso: string }) => ({
       cities: (City.getCitiesOfCountry(iso.toUpperCase()) ?? []).map((city, index) => ({
@@ -189,9 +190,10 @@ export const queryResolvers = {
     },
 
     restaurant: (_parent: unknown, args: { id?: string; slug?: string }) =>
-      Restaurant.findOne(args.id ? { _id: args.id } : { slug: args.slug }),
-    restaurantList: () => Restaurant.find({ isActive: true }).select('name address'),
-    restaurants: () => Restaurant.find().sort({ createdAt: -1 }),
+      Restaurant.findOne(args.id ? { _id: args.id } : { slug: args.slug }).exec(),
+    restaurantList: () =>
+      Restaurant.find({ isActive: true }).select('name address').exec(),
+    restaurants: () => Restaurant.find().sort({ createdAt: -1 }).exec(),
     restaurantByOwner: (_parent: unknown, { id }: { id?: string }, context: GraphQLContext) =>
       User.findById(id ?? context.user?.id).populate('restaurants'),
     async nearByRestaurants(
@@ -360,7 +362,7 @@ export const queryResolvers = {
     },
     getPaymentStatuses: () => ['PENDING', 'PAID', 'FAILED', 'REFUNDED'],
     offers: () => Offer.find().populate('restaurants'),
-    sections: () => Section.find().populate('restaurants'),
+    sections: () => Section.find().populate('restaurants').exec(),
     reviews: (_parent: unknown, { restaurant }: { restaurant: string }) =>
       Review.find({ restaurant, isActive: true }).sort({ createdAt: -1 }),
 
