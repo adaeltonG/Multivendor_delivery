@@ -1,4 +1,5 @@
 import { GraphQLScalarType, Kind } from 'graphql'
+import { trusted } from 'mongoose'
 import {
   Order,
   Restaurant,
@@ -69,7 +70,7 @@ export const fieldResolvers = {
     restaurants: (parent: any) => {
       if (!parent.restaurants?.length) return []
       if (hasObject(parent.restaurants[0])) return parent.restaurants
-      return Restaurant.find({ _id: { $in: parent.restaurants } })
+      return Restaurant.find({ _id: trusted({ $in: parent.restaurants }) })
     }
   },
   Rider: {
@@ -160,14 +161,14 @@ export const fieldResolvers = {
     restaurants: (parent: any) => {
       if (!parent.restaurants?.length) return []
       if (hasObject(parent.restaurants[0])) return parent.restaurants
-      return Restaurant.find({ _id: { $in: parent.restaurants } })
+      return Restaurant.find({ _id: trusted({ $in: parent.restaurants }) })
     }
   },
   Section: {
     restaurants: (parent: any) => {
       if (!parent.restaurants?.length) return []
       if (hasObject(parent.restaurants[0])) return parent.restaurants
-      return Restaurant.find({ _id: { $in: parent.restaurants } })
+      return Restaurant.find({ _id: trusted({ $in: parent.restaurants }) })
     }
   },
   Earning: {

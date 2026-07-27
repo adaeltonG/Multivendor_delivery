@@ -1,3 +1,4 @@
+import { trusted } from 'mongoose'
 import {
   Banner,
   Configuration,
@@ -309,7 +310,10 @@ export const adminResolvers = {
       context: GraphQLContext
     ) {
       admin(context)
-      const owner = await User.findOne({ _id: args.owner, userType: { $in: ['VENDOR', 'ADMIN'] } })
+      const owner = await User.findOne({
+        _id: args.owner,
+        userType: trusted({ $in: ['VENDOR', 'ADMIN'] })
+      })
       if (!owner) notFound('Vendor')
       let slug = slugify(args.restaurant.name)
       if (await Restaurant.exists({ slug })) slug = `${slug}-${Date.now()}`

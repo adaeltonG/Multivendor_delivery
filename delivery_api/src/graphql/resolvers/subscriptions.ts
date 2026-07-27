@@ -1,4 +1,5 @@
 import { Order, Rider } from '../../models/index.js'
+import { trusted } from 'mongoose'
 import type { GraphQLContext } from '../context.js'
 import { pubsub, topics } from '../pubsub.js'
 import { assertCanReadOrder } from '../../services/order.service.js'
@@ -101,7 +102,9 @@ export const subscriptionResolvers = {
           const allowed = await Order.exists({
             user: context.user.id,
             rider: riderId,
-            orderStatus: { $nin: ['DELIVERED', 'COMPLETED', 'CANCELLED'] }
+            orderStatus: trusted({
+              $nin: ['DELIVERED', 'COMPLETED', 'CANCELLED']
+            })
           })
           if (!allowed) forbidden()
         }

@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql'
+import { trusted } from 'mongoose'
 import { Restaurant, Rider, User } from '../../models/index.js'
 import type { GraphQLContext, UserRole } from '../context.js'
 import {
@@ -147,7 +148,7 @@ export const authResolvers = {
     async ownerLogin(_parent: unknown, args: { email: string; password: string }) {
       const owner = await User.findOne({
         email: args.email.toLowerCase(),
-        userType: { $in: ['VENDOR', 'ADMIN'] }
+        userType: trusted({ $in: ['VENDOR', 'ADMIN'] })
       })
         .select('+password')
         .populate('restaurants')

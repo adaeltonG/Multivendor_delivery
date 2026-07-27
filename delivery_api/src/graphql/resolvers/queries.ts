@@ -1,4 +1,4 @@
-import { Types } from 'mongoose'
+import { trusted, Types } from 'mongoose'
 import { City } from 'country-state-city'
 import {
   Banner,
@@ -23,17 +23,17 @@ import type { GraphQLContext } from '../context.js'
 import { forbidden, notFound, unauthenticated } from '../../utils/errors.js'
 import { assertCanReadOrder } from '../../services/order.service.js'
 
-const ACTIVE_STATUSES = {
+const ACTIVE_STATUSES = trusted({
   $nin: ['DELIVERED', 'COMPLETED', 'CANCELLED']
-}
+})
 
 function dateFilter(starting?: string, ending?: string) {
   if (!starting && !ending) return {}
   return {
-    createdAt: {
+    createdAt: trusted({
       ...(starting ? { $gte: new Date(starting) } : {}),
       ...(ending ? { $lte: new Date(ending) } : {})
-    }
+    })
   }
 }
 
@@ -54,12 +54,12 @@ async function nearbyRestaurants(latitude?: number, longitude?: number, shopType
     Number.isFinite(latitude) &&
     Number.isFinite(longitude)
   ) {
-    filter.location = {
+    filter.location = trusted({
       $near: {
         $geometry: { type: 'Point', coordinates: [longitude, latitude] },
         $maxDistance: 50_000
       }
-    }
+    })
   }
   return Restaurant.find(filter).limit(100)
 }
@@ -128,7 +128,9 @@ export const queryResolvers = {
     ) => {
       const pagination = pageValues(args.page, args.rows)
       const filter: Record<string, unknown> = { restaurant: args.restaurant }
-      if (args.search) filter.orderId = { $regex: args.search, $options: 'i' }
+      if (args.search) {
+        filter.orderId = trusted({ $regex: args.search, $options: 'i' })
+      }
       return Order.find(filter)
         .sort({ createdAt: -1 })
         .skip(pagination.skip)
@@ -175,7 +177,9 @@ export const queryResolvers = {
       const filter: Record<string, unknown> = {
         orderStatus: ACTIVE_STATUSES,
         ...(args.restaurantId ? { restaurant: args.restaurantId } : {}),
-        ...(args.search ? { orderId: { $regex: args.search, $options: 'i' } } : {})
+        ...(args.search
+          ? { orderId: trusted({ $regex: args.search, $options: 'i' }) }
+          : {})
       }
       const [orders, orderCount] = await Promise.all([
         Order.find(filter).sort({ createdAt: -1 }).skip(pagination.skip).limit(pagination.rows),
@@ -223,7 +227,7 @@ export const queryResolvers = {
       const ids = await Order.find({ user: context.user.id })
         .sort({ createdAt: -1 })
         .distinct('restaurant')
-      return Restaurant.find({ _id: { $in: ids } }).limit(20)
+      return Restaurant.find({ _id: trusted({ $in: ids }) }).limit(20)
     },
     async mostOrderedRestaurantsPreview() {
       const values = await Order.aggregate([
@@ -231,7 +235,9 @@ export const queryResolvers = {
         { $sort: { count: -1 } },
         { $limit: 20 }
       ])
-      return Restaurant.find({ _id: { $in: values.map(value => value._id) } })
+      return Restaurant.find({
+        _id: trusted({ $in: values.map(value => value._id) })
+      })
     },
     async relatedItems(
       _parent: unknown,
@@ -285,7 +291,7 @@ export const queryResolvers = {
     ) {
       const pagination = pageValues(args.page, args.rowsPerPage)
       const filter = args.search
-        ? { requestId: { $regex: args.search, $options: 'i' } }
+        ? { requestId: trusted({ $regex: args.search, $options: 'i' }) }
         : {}
       const [data, total] = await Promise.all([
         WithdrawRequest.find(filter)
@@ -327,7 +333,7 @@ export const queryResolvers = {
     ) {
       const pagination = pageValues(args.page, args.rowsPerPage)
       const filter = args.search
-        ? { title: { $regex: args.search, $options: 'i' } }
+        ? { title: trusted({ $regex: args.search, $options: 'i' }) }
         : {}
       const [coupons, totalCount] = await Promise.all([
         Coupon.find(filter).sort({ createdAt: -1 }).skip(pagination.skip).limit(pagination.rows),
