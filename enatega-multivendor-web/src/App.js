@@ -184,14 +184,8 @@ function App() {
 
   }, [SENTRY_DSN]);
 
-  return GOOGLE_MAPS_KEY ? (
-    <HashRouter>
-      <GoogleMapsLoader
-        GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY}
-        LIBRARIES={LIBRARIES}
-        VAPID_KEY={VAPID_KEY}
-      >
-        <Routes>
+  const routes = (
+    <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/restaurant-list" element={<Restaurants />} />
           <Route path="/restaurant/:slug" element={<RestaurantDetail />} />
@@ -346,20 +340,23 @@ function App() {
               </PrivateRoute>
             }
           />
-        </Routes>
-      </GoogleMapsLoader>
+    </Routes>
+  );
+
+  return (
+    <HashRouter>
+      {GOOGLE_MAPS_KEY ? (
+        <GoogleMapsLoader
+          GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY}
+          LIBRARIES={LIBRARIES}
+          VAPID_KEY={VAPID_KEY}
+        >
+          {routes}
+        </GoogleMapsLoader>
+      ) : (
+        routes
+      )}
     </HashRouter>
-  ) : (
-    <Box
-      component="div"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-      width="100vw"
-    >
-      <CircularProgress color="primary" />
-    </Box>
   );
 }
 
