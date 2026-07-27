@@ -48,7 +48,7 @@
     "expo-audio": "~1.1.1",
     "expo-constants": "~18.0.13",
     "expo-device": "~8.0.10",
-    "expo-font": "~14.0.12",
+    "expo-font": "~57.0.1",
     "expo-localization": "~17.0.9",
     "expo-notifications": "~0.32.17",
     "expo-print": "~15.0.8",
