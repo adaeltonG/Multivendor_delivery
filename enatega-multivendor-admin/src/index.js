@@ -43,6 +43,7 @@ function Main() {
     uri: `${WS_SERVER_URL}/graphql`,
     options: {
       reconnect: true,
+      lazy: true,
       connectionParams: () => ({
         authorization: getAuthorization()
       })

@@ -13,7 +13,9 @@
       ],
       "expo-font",
       "expo-localization",
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "expo-audio",
+      "expo-asset"
     ],
     "androidStatusBar": {
       "backgroundColor": "#000000"

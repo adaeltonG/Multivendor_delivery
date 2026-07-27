@@ -44,7 +44,9 @@
       "expo-localization",
       "expo-secure-store",
       "@sentry/react-native",
-      "expo-font"
+      "expo-font",
+      "expo-audio",
+      "expo-asset"
     ]
   }
 }

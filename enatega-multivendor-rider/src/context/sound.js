@@ -1,12 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useTabsContext } from './tabs'
-import { Audio } from 'expo-av'
+import { setAudioModeAsync, useAudioPlayer } from 'expo-audio'
 import { useUserContext } from './user'
 const SoundContext = React.createContext()
 export const SoundContextProvider = ({ children }) => {
-  const [sound, setSound] = useState(null)
+  const player = useAudioPlayer(require('../assets/beep3.mp3'))
   const { active } = useTabsContext()
   const { assignedOrders } = useUserContext()
+
+  useEffect(() => {
+    setAudioModeAsync({
+      allowsRecording: false,
+      shouldPlayInBackground: true,
+      interruptionMode: 'duckOthers',
+      playsInSilentMode: true,
+      shouldRouteThroughEarpiece: false
+    })
+  }, [])
+
   useEffect(() => {
     if (assignedOrders) {
       const shouldPlaySound = assignedOrders.some(o => o.isRiderRinged)
@@ -17,25 +28,13 @@ export const SoundContextProvider = ({ children }) => {
   const playSound = async () => {
     if (active === 'NewOrders') {
       await stopSound()
-      const { sound } = await Audio.Sound.createAsync(
-        require('../assets/beep3.mp3')
-      )
-      await sound.setIsLoopingAsync(true)
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        staysActiveInBackground: true,
-        interruptionModeIOS: (Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS = 2),
-        playsInSilentModeIOS: true,
-        shouldDuckAndroid: true,
-        interruptionModeAndroid: (Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS = 2),
-        playThroughEarpieceAndroid: false
-      })
-      await sound.playAsync()
-      setSound(sound)
+      player.loop = true
+      player.play()
     }
   }
   const stopSound = async () => {
-    await sound?.unloadAsync()
+    player.pause()
+    await player.seekTo(0)
   }
   return (
     <SoundContext.Provider value={{ playSound, stopSound }}>

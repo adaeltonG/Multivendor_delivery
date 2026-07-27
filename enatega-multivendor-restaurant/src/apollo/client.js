@@ -18,7 +18,14 @@ function setupApolloClient() {
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {
-      reconnect: true
+      reconnect: true,
+      lazy: true,
+      connectionParams: async () => {
+        const token = await SecureStore.getItemAsync('token')
+        return {
+          authorization: token ? `Bearer ${token}` : ''
+        }
+      }
     }
   })
   const cache = new InMemoryCache()

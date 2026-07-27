@@ -5,8 +5,6 @@ import ConfigurationContext from './src/context/configuration'
 const getEnvVars = (env = Updates.releaseChannel) => {
   const configuration = useContext(ConfigurationContext)
 
-  console.log('configuration', configuration)
-
   if (env === 'production' || env === 'staging') {
     return {
       GRAPHQL_URL: 'https://zetahub.co.uk/api/graphql',

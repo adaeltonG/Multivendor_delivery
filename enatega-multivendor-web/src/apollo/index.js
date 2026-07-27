@@ -22,6 +22,13 @@ const setupApollo = () => {
     uri: `${WS_SERVER_URL}graphql`,
     options: {
       reconnect: true,
+      lazy: true,
+      connectionParams: () => {
+        const token = localStorage.getItem("token");
+        return {
+          authorization: token ? `Bearer ${token}` : "",
+        };
+      },
     },
   });
 

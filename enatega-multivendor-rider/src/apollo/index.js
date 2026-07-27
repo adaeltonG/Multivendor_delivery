@@ -45,7 +45,14 @@ function setupApolloClient() {
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {
-      reconnect: true
+      reconnect: true,
+      lazy: true,
+      connectionParams: async () => {
+        const token = await AsyncStorage.getItem('rider-token')
+        return {
+          authorization: token ? `Bearer ${token}` : ''
+        }
+      }
     }
   })
 

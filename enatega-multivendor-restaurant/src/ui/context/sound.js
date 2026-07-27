@@ -1,10 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Audio } from 'expo-av'
+import React, { useContext, useEffect } from 'react'
+import { setAudioModeAsync, useAudioPlayer } from 'expo-audio'
 import { useRestaurantContext } from './restaurant'
 const SoundContext = React.createContext()
 export const SoundContextProvider = ({ children }) => {
-  const [sound, setSound] = useState(null)
+  const player = useAudioPlayer(require('../../assets/beep.mp3'))
   const { data } = useRestaurantContext()
+
+  useEffect(() => {
+    setAudioModeAsync({
+      allowsRecording: false,
+      shouldPlayInBackground: true,
+      interruptionMode: 'duckOthers',
+      playsInSilentMode: true,
+      shouldRouteThroughEarpiece: false
+    })
+  }, [])
 
   useEffect(() => {
     if (data) {
@@ -18,24 +28,12 @@ export const SoundContextProvider = ({ children }) => {
   }, [data])
   const playSound = async () => {
     await stopSound()
-    const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/beep.mp3')
-    )
-    await sound.setIsLoopingAsync(true)
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      interruptionModeIOS: (Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS = 2),
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: (Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS = 2),
-      playThroughEarpieceAndroid: false
-    })
-    await sound.playAsync()
-    setSound(sound)
+    player.loop = true
+    player.play()
   }
   const stopSound = async () => {
-    await sound?.unloadAsync()
+    player.pause()
+    await player.seekTo(0)
   }
   return (
     <SoundContext.Provider value={{ playSound, stopSound }}>

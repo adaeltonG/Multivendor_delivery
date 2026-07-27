@@ -168,10 +168,12 @@ function Main() {
     <UserProvider>
       <SoundContextProvider>
         <Drawer.Navigator
-          drawerType="slide"
-          drawerPosition="right"
           drawerContent={props => <Sidebar {...props} />}
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{
+            headerShown: false,
+            drawerType: 'slide',
+            drawerPosition: 'right'
+          }}>
           {/*<Drawer.Screen name="SidebBar" component={Sidebar} />*/}
 
           <Drawer.Screen name="noDrawer" component={NoDrawer} />
