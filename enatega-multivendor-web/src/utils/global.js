@@ -1,1 +1,2 @@
-export const SERVER_URL = "https://enatega-multivendor.up.railway.app/";
+export const SERVER_URL =
+  process.env.REACT_APP_SERVER_URL || "https://zetahub.co.uk/api/";

@@ -8,8 +8,10 @@ import ConfigurationContext from "../context/Configuration";
 export const useConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext);
 
-  const SERVER_URL = "https://enatega-multivendor.up.railway.app/";
-  const WS_SERVER_URL = "wss://enatega-multivendor.up.railway.app/";
+  const SERVER_URL =
+    process.env.REACT_APP_SERVER_URL || "https://zetahub.co.uk/api/";
+  const WS_SERVER_URL =
+    process.env.REACT_APP_WS_SERVER_URL || "wss://zetahub.co.uk/api/";
   const GOOGLE_CLIENT_ID = configuration?.webClientID;
   const STRIPE_PUBLIC_KEY = configuration?.publishableKey;
   const PAYPAL_KEY = configuration?.clientId;

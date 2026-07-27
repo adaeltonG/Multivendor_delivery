@@ -5,10 +5,10 @@ import ConfigurationContext from "../../src/context/Configuration";
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext);
 
-  const SERVER_URL = "https://enatega-multivendor.up.railway.app/";
-  const WS_SERVER_URL = "wss://enatega-multivendor.up.railway.app/";
-  //const SERVER_URL = 'http://192.168.100.15:8001/'
-  //const WS_SERVER_URL = 'ws://192.168.100.15:8001/'
+  const SERVER_URL =
+    process.env.REACT_APP_SERVER_URL || "https://zetahub.co.uk/api/";
+  const WS_SERVER_URL =
+    process.env.REACT_APP_WS_SERVER_URL || "wss://zetahub.co.uk/api/";
 
   
   const GOOGLE_CLIENT_ID = configuration?.webClientID;
