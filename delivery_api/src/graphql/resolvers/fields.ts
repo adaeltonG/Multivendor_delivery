@@ -64,6 +64,14 @@ export const fieldResolvers = {
   Address: {
     id: idValue
   },
+  Zone: {
+    title: (parent: any) => {
+      const title = parent.title ?? parent.name ?? parent._doc?.name
+      return typeof title === 'string' && title.trim()
+        ? title.trim()
+        : `Zone ${idValue(parent)}`
+    }
+  },
   User: {
     id: idValue,
     password: () => '',

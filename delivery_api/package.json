@@ -14,6 +14,7 @@
     "check:frontend-contract": "tsx src/scripts/check-frontend-contract.ts",
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "migrate": "tsx src/scripts/migrate.ts",
     "seed": "tsx src/scripts/seed.ts",
     "test": "vitest run"
   },

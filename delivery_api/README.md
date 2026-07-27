@@ -98,11 +98,14 @@ npm run typecheck
 npm run check:frontend-contract
 npm test
 npm run build
+npm run migrate
 npm start
 ```
 
 `npm run seed` is idempotent and creates an admin, vendor, restaurant, rider,
 zone, sample menu, coupon, and configuration using `.env` values.
+`npm run migrate` is idempotent and normalizes legacy MongoDB documents to the
+current GraphQL contract before production traffic is served.
 
 ## Production notes
 
