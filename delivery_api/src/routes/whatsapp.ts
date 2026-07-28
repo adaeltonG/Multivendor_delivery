@@ -52,7 +52,19 @@ whatsappRouter.post('/', (req: RawBodyRequest, res) => {
       changes?: Array<{
         value?: {
           messages?: Array<{ id?: string; from?: string; type?: string }>
-          statuses?: Array<{ id?: string; status?: string; recipient_id?: string }>
+          statuses?: Array<{
+            id?: string
+            status?: string
+            recipient_id?: string
+            errors?: Array<{
+              code?: number
+              title?: string
+              message?: string
+              error_data?: {
+                details?: string
+              }
+            }>
+          }>
         }
       }>
     }>
@@ -80,7 +92,13 @@ whatsappRouter.post('/', (req: RawBodyRequest, res) => {
           {
             messageId: status.id,
             deliveryStatus: status.status,
-            recipientSuffix: status.recipient_id?.slice(-4)
+            recipientSuffix: status.recipient_id?.slice(-4),
+            errors: status.errors?.map(error => ({
+              code: error.code,
+              title: error.title,
+              message: error.message,
+              details: error.error_data?.details
+            }))
           },
           'WhatsApp delivery status received'
         )
