@@ -9,6 +9,12 @@ import {
 import type { GraphQLContext } from '../graphql/context.js'
 import { pubsub, topics } from '../graphql/pubsub.js'
 import { badUserInput, forbidden, notFound, unauthenticated } from '../utils/errors.js'
+import {
+  dispatchWhatsApp,
+  notifyWhatsAppOrderCreated,
+  notifyWhatsAppOrderStatus,
+  notifyWhatsAppRiderAssigned
+} from './whatsapp.service.js'
 
 type OrderInput = {
   food: string
@@ -203,6 +209,10 @@ export async function createOrder(
         })
       : Promise.resolve()
   ])
+  dispatchWhatsApp(() => notifyWhatsAppOrderCreated(order.id), {
+    orderId: order.orderId,
+    notification: 'ORDER_CREATED'
+  })
 
   return order
 }
@@ -267,6 +277,11 @@ export async function changeOrderStatus(
       orderStatusChanged: event
     })
   ])
+  dispatchWhatsApp(() => notifyWhatsAppOrderStatus(order.id), {
+    orderId: order.orderId,
+    notification: 'ORDER_STATUS',
+    status
+  })
   return order
 }
 
@@ -311,6 +326,15 @@ export async function assignRiderToOrder(
       }
     })
   ])
+  dispatchWhatsApp(() => notifyWhatsAppOrderStatus(order.id), {
+    orderId: order.orderId,
+    notification: 'ORDER_STATUS',
+    status: 'ASSIGNED'
+  })
+  dispatchWhatsApp(() => notifyWhatsAppRiderAssigned(order.id), {
+    orderId: order.orderId,
+    notification: 'RIDER_ASSIGNED'
+  })
   return order
 }
 

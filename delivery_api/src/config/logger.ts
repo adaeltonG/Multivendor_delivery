@@ -9,7 +9,10 @@ export const logger = pino({
       'authorization',
       'password',
       '*.password',
-      'JWT_SECRET'
+      'JWT_SECRET',
+      'WHATSAPP_ACCESS_TOKEN',
+      'WHATSAPP_APP_SECRET',
+      '*.accessToken'
     ],
     censor: '[REDACTED]'
   }

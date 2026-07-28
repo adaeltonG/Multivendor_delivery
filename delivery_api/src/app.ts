@@ -18,6 +18,7 @@ import { logger } from './config/logger.js'
 import { contextFromAuthorization, type GraphQLContext } from './graphql/context.js'
 import { resolvers } from './graphql/resolvers/index.js'
 import { typeDefs } from './graphql/typeDefs.js'
+import { whatsappRouter } from './routes/whatsapp.js'
 
 export type AppServer = {
   httpServer: Server
@@ -133,6 +134,16 @@ export async function createAppServer(): Promise<AppServer> {
       health: '/health'
     })
   })
+  app.use(
+    '/webhooks/whatsapp',
+    express.json({
+      limit: '256kb',
+      verify: (req, _res, buffer) => {
+        ;(req as express.Request & { rawBody?: Buffer }).rawBody = Buffer.from(buffer)
+      }
+    }),
+    whatsappRouter
+  )
   app.use(
     env.GRAPHQL_PATH,
     rateLimit({

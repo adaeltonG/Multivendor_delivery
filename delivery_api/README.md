@@ -20,10 +20,40 @@ this repository.
 - Modern `graphql-transport-ws` subscriptions plus the repository's legacy
   `graphql-ws` protocol during migration.
 
-Third-party delivery is deliberately separated from the core API. The checked-in
-OTP and notification mutations provide local-development acknowledgement only.
+Third-party delivery is deliberately separated from the core API. WhatsApp Cloud
+API transactional notifications are implemented as an optional provider adapter.
 Real OTP/email delivery, push notifications, Stripe/PayPal account creation, and
-Cloudinary uploads require provider-specific service adapters before production.
+Cloudinary uploads still require provider-specific adapters before production.
+
+## WhatsApp Cloud API
+
+Set `WHATSAPP_VERIFY_TOKEN` first so Meta can verify the callback while
+`WHATSAPP_ENABLED=false`. Set `WHATSAPP_ENABLED=true` only after the Meta app,
+permanent system-user token, phone-number ID, app secret, verification token,
+and approved templates are ready. The public webhook callback is:
+
+```text
+https://zetahub.co.uk/webhooks/whatsapp
+```
+
+Create these templates in WhatsApp Manager with language `en_GB` (or change
+`WHATSAPP_TEMPLATE_LANGUAGE`). Body variables must remain in this order:
+
+- `zetahub_new_order`: restaurant/owner name, order ID, order amount.
+- `zetahub_order_status`: customer name, order ID, status, restaurant name.
+- `zetahub_rider_assigned`: rider name, order ID, restaurant name, pickup address.
+
+Example template bodies:
+
+```text
+New Zetahub order for {{1}}. Order {{2}}, total £{{3}}. Open the restaurant app to respond.
+Hi {{1}}, order {{2}} is now {{3}} at {{4}}.
+Hi {{1}}, order {{2}} is ready for you at {{3}}. Pickup: {{4}}.
+```
+
+The API verifies `X-Hub-Signature-256` on webhook POST requests and immediately
+acknowledges valid Meta events. Notification delivery runs asynchronously:
+WhatsApp outages are logged but never roll back an order operation.
 
 ## Run locally
 
