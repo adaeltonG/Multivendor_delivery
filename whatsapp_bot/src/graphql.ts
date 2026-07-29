@@ -29,6 +29,46 @@ export const TOGGLE_RESTAURANT_AVAILABILITY = gql`
   }
 `
 
+export const WHATSAPP_CONNECTIONS = gql`
+  query WhatsAppConnections {
+    whatsappConnections {
+      _id
+      displayPhoneNumber
+      verifiedName
+      accessTokenConfigured
+      isActive
+    }
+  }
+`
+
+export const WHATSAPP_MESSAGE_TEMPLATES = gql`
+  query WhatsAppMessageTemplates($connectionId: ID) {
+    whatsappMessageTemplates(connectionId: $connectionId) {
+      id
+      name
+      status
+      category
+      language
+      body
+    }
+  }
+`
+
+export const CREATE_WHATSAPP_MESSAGE_TEMPLATE = gql`
+  mutation CreateWhatsAppMessageTemplate(
+    $input: CreateWhatsAppMessageTemplateInput!
+  ) {
+    createWhatsAppMessageTemplate(input: $input) {
+      id
+      name
+      status
+      category
+      language
+      body
+    }
+  }
+`
+
 export const CONVERSATIONS = gql`
   query WhatsAppConversations(
     $status: WhatsAppConversationStatus

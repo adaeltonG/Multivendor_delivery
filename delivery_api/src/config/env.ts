@@ -15,6 +15,7 @@ const envSchema = z.object({
     .transform(value => value === 'true'),
   WHATSAPP_ACCESS_TOKEN: z.string().default(''),
   WHATSAPP_PHONE_NUMBER_ID: z.string().default(''),
+  WHATSAPP_BUSINESS_ACCOUNT_ID: z.string().default(''),
   WHATSAPP_VERIFY_TOKEN: z.string().default(''),
   WHATSAPP_APP_SECRET: z.string().default(''),
   WHATSAPP_TOKEN_ENCRYPTION_KEY: z.string().default(''),

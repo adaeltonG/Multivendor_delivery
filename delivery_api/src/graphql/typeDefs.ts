@@ -1024,6 +1024,30 @@ export const typeDefs = `#graphql
     isActive: Boolean
   }
 
+  enum WhatsAppMessageTemplateCategory {
+    UTILITY
+    MARKETING
+    AUTHENTICATION
+  }
+
+  type WhatsAppMessageTemplate {
+    id: ID!
+    name: String!
+    status: String!
+    category: WhatsAppMessageTemplateCategory!
+    language: String!
+    body: String!
+  }
+
+  input CreateWhatsAppMessageTemplateInput {
+    connectionId: ID
+    name: String!
+    category: WhatsAppMessageTemplateCategory!
+    language: String!
+    body: String!
+    exampleValues: [String!]
+  }
+
   type Query {
     users: [User!]!
     profile: User
@@ -1083,6 +1107,7 @@ export const typeDefs = `#graphql
     getDashboardOrders(starting_date: String, ending_date: String, restaurant: String!): DashboardSeries!
     getDashboardData(starting_date: String, ending_date: String): DashboardData!
     whatsappConnections(restaurantId: ID): [WhatsAppConnection!]!
+    whatsappMessageTemplates(connectionId: ID): [WhatsAppMessageTemplate!]!
     whatsappConversations(restaurantId: ID, status: WhatsAppConversationStatus, limit: Int, offset: Int): [WhatsAppConversation!]!
     whatsappMessages(conversationId: ID!, limit: Int, before: DateTime): [WhatsAppMessage!]!
   }
@@ -1199,6 +1224,7 @@ export const typeDefs = `#graphql
     saveVerificationsToggle(configurationInput: VerificationConfigurationInput!): Configuration!
     saveCurrencyConfiguration(configurationInput: CurrencyConfigurationInput!): Configuration!
     upsertWhatsAppConnection(input: WhatsAppConnectionInput!): WhatsAppConnection!
+    createWhatsAppMessageTemplate(input: CreateWhatsAppMessageTemplateInput!): WhatsAppMessageTemplate!
     takeOverWhatsAppConversation(conversationId: ID!): WhatsAppConversation!
     releaseWhatsAppConversationToBot(conversationId: ID!): WhatsAppConversation!
     closeWhatsAppConversation(conversationId: ID!): WhatsAppConversation!

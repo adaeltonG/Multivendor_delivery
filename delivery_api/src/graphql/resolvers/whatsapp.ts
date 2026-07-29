@@ -12,6 +12,12 @@ import {
   publishWhatsAppConversation,
   sendWhatsAppText
 } from '../../services/whatsapp.gateway.js'
+import {
+  createWhatsAppMessageTemplate,
+  listWhatsAppMessageTemplates
+} from '../../services/whatsapp.templates.js'
+import type { WhatsAppTemplateCategory } from '../../services/whatsapp.template-validation.js'
+import { env } from '../../config/env.js'
 import { pubsub, topics } from '../pubsub.js'
 
 function scopedRestaurantId(context: GraphQLContext, requested?: string): string | undefined {
@@ -38,9 +44,39 @@ async function authorizedConversation(id: string, context: GraphQLContext) {
   return conversation
 }
 
+async function authorizedConnectionId(
+  requestedId: string | undefined,
+  context: GraphQLContext
+): Promise<string> {
+  const restaurantId = scopedRestaurantId(context)
+  if (context.user?.role === 'ADMIN' && !requestedId) {
+    badUserInput('connectionId is required for an admin request')
+  }
+  const connection = requestedId
+    ? await WhatsAppConnection.findById(requestedId)
+    : await WhatsAppConnection.findOne({
+        restaurant: restaurantId,
+        isActive: true
+      }).sort({ updatedAt: -1 })
+  if (!connection) notFound('WhatsApp connection')
+  if (
+    context.user?.role === 'RESTAURANT' &&
+    connection.restaurant?.toString() !== restaurantId
+  ) {
+    forbidden()
+  }
+  return connection.id
+}
+
 export const whatsappResolvers = {
   WhatsAppConnection: {
-    accessTokenConfigured: (parent: any) => Boolean(parent.accessTokenEncrypted)
+    accessTokenConfigured: (parent: any) =>
+      Boolean(parent.accessTokenEncrypted) ||
+      Boolean(
+        env.WHATSAPP_ACCESS_TOKEN &&
+          env.WHATSAPP_PHONE_NUMBER_ID &&
+          parent.phoneNumberId === env.WHATSAPP_PHONE_NUMBER_ID
+      )
   },
   WhatsAppConversation: {
     restaurant: (parent: any) => parent.restaurant?.toString(),
@@ -67,6 +103,14 @@ export const whatsappResolvers = {
       })
         .select('+accessTokenEncrypted')
         .sort({ createdAt: -1 })
+    },
+    async whatsappMessageTemplates(
+      _parent: unknown,
+      { connectionId }: { connectionId?: string },
+      context: GraphQLContext
+    ) {
+      const authorizedId = await authorizedConnectionId(connectionId, context)
+      return listWhatsAppMessageTemplates(authorizedId)
     },
     whatsappConversations: (
       _parent: unknown,
@@ -105,6 +149,26 @@ export const whatsappResolvers = {
     }
   },
   Mutation: {
+    async createWhatsAppMessageTemplate(
+      _parent: unknown,
+      args: {
+        input: {
+          connectionId?: string
+          name: string
+          category: WhatsAppTemplateCategory
+          language: string
+          body: string
+          exampleValues?: string[]
+        }
+      },
+      context: GraphQLContext
+    ) {
+      const connectionId = await authorizedConnectionId(
+        args.input.connectionId,
+        context
+      )
+      return createWhatsAppMessageTemplate(connectionId, args.input)
+    },
     async upsertWhatsAppConnection(
       _parent: unknown,
       args: {

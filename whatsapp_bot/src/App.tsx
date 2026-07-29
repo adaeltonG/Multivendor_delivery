@@ -15,6 +15,7 @@ import {
 } from '@apollo/client'
 import {
   CLOSE,
+  CREATE_WHATSAPP_MESSAGE_TEMPLATE,
   CONVERSATION_UPDATED,
   CONVERSATIONS,
   MARK_READ,
@@ -25,7 +26,9 @@ import {
   RELEASE,
   SEND,
   TAKE_OVER,
-  TOGGLE_RESTAURANT_AVAILABILITY
+  TOGGLE_RESTAURANT_AVAILABILITY,
+  WHATSAPP_CONNECTIONS,
+  WHATSAPP_MESSAGE_TEMPLATES
 } from './graphql'
 import type {
   Conversation,
@@ -34,6 +37,24 @@ import type {
 } from './types'
 
 type QueueFilter = 'ALL' | ConversationStatus
+type AppView = 'INBOX' | 'TEMPLATES'
+
+type WhatsAppConnection = {
+  _id: string
+  displayPhoneNumber?: string | null
+  verifiedName?: string | null
+  accessTokenConfigured: boolean
+  isActive: boolean
+}
+
+type WhatsAppTemplate = {
+  id: string
+  name: string
+  status: string
+  category: string
+  language: string
+  body: string
+}
 
 const filters: Array<{ label: string; value: QueueFilter }> = [
   { label: 'All', value: 'ALL' },
@@ -706,9 +727,297 @@ function Workspace({
   )
 }
 
+function TemplatesView({ token }: { token: string }) {
+  const [name, setName] = useState('')
+  const [category, setCategory] = useState('UTILITY')
+  const [language, setLanguage] = useState('en_GB')
+  const [body, setBody] = useState('')
+  const [exampleValues, setExampleValues] = useState<Record<number, string>>({})
+  const [successTemplate, setSuccessTemplate] = useState<WhatsAppTemplate | null>(null)
+
+  const connectionsQuery = useQuery<{ whatsappConnections: WhatsAppConnection[] }>(
+    WHATSAPP_CONNECTIONS,
+    { skip: !token }
+  )
+  const connection =
+    connectionsQuery.data?.whatsappConnections.find((item) => item.isActive) ||
+    connectionsQuery.data?.whatsappConnections[0] ||
+    null
+  const templatesQuery = useQuery<{ whatsappMessageTemplates: WhatsAppTemplate[] }>(
+    WHATSAPP_MESSAGE_TEMPLATES,
+    {
+      variables: { connectionId: connection?._id },
+      skip: !token || !connection
+    }
+  )
+  const [createTemplate, createState] = useMutation<
+    { createWhatsAppMessageTemplate: WhatsAppTemplate },
+    {
+      input: {
+        connectionId?: string
+        name: string
+        category: string
+        language: string
+        body: string
+        exampleValues: string[]
+      }
+    }
+  >(CREATE_WHATSAPP_MESSAGE_TEMPLATE)
+
+  const variableNumbers = useMemo(
+    () =>
+      Array.from(body.matchAll(/\{\{(\d+)\}\}/g))
+        .map((match) => Number(match[1]))
+        .filter((value, index, values) => values.indexOf(value) === index)
+        .sort((a, b) => a - b),
+    [body]
+  )
+  const templateNameValid = /^[a-z][a-z0-9_]{0,511}$/.test(name)
+  const variablesValid = variableNumbers.every(
+    (number, index) => number === index + 1 && exampleValues[number]?.trim()
+  )
+
+  const submitTemplate = async (event: FormEvent) => {
+    event.preventDefault()
+    if (!connection || !templateNameValid || !body.trim() || !variablesValid) return
+    setSuccessTemplate(null)
+    const result = await createTemplate({
+      variables: {
+        input: {
+          connectionId: connection._id,
+          name,
+          category,
+          language,
+          body: body.trim(),
+          exampleValues: variableNumbers.map((number) =>
+            exampleValues[number].trim()
+          )
+        }
+      }
+    })
+    const created = result.data?.createWhatsAppMessageTemplate
+    if (created) {
+      setSuccessTemplate(created)
+      setName('')
+      setBody('')
+      setExampleValues({})
+      await templatesQuery.refetch()
+    }
+  }
+
+  const templates = templatesQuery.data?.whatsappMessageTemplates || []
+  const connectionReady =
+    connection?.isActive && connection?.accessTokenConfigured
+
+  return (
+    <main className="templates-page">
+      <section className="templates-heading">
+        <div>
+          <p className="eyebrow">WhatsApp management</p>
+          <h1>Message templates</h1>
+          <p>
+            Create business-initiated messages for orders and customer updates.
+          </p>
+        </div>
+        <div
+          className={`connection-card ${connectionReady ? 'ready' : 'attention'}`}
+          role="status"
+        >
+          <span className="connection-dot" aria-hidden="true" />
+          <span>
+            <small>{connectionReady ? 'Connected number' : 'Connection needs attention'}</small>
+            <strong>
+              {connection?.verifiedName ||
+                connection?.displayPhoneNumber ||
+                'No WhatsApp connection'}
+            </strong>
+            {connection?.displayPhoneNumber && connection?.verifiedName && (
+              <em>{connection.displayPhoneNumber}</em>
+            )}
+          </span>
+        </div>
+      </section>
+
+      {successTemplate && (
+        <section className="template-success" role="status" aria-live="polite">
+          <span className="success-icon" aria-hidden="true">✓</span>
+          <div>
+            <strong>Template submitted to Meta</strong>
+            <p>
+              <code>{successTemplate.name}</code> now appears below with status{' '}
+              <b>{successTemplate.status}</b>.
+            </p>
+          </div>
+        </section>
+      )}
+
+      <div className="templates-layout">
+        <section className="template-create-card" aria-labelledby="create-template-title">
+          <div className="section-heading">
+            <span className="section-number">01</span>
+            <div>
+              <p className="eyebrow">Create with NextHop</p>
+              <h2 id="create-template-title">New template</h2>
+            </div>
+          </div>
+          {!connectionReady && !connectionsQuery.loading && (
+            <p className="inline-warning" role="alert">
+              Connect an active WhatsApp number with an access token before
+              creating templates.
+            </p>
+          )}
+          <form className="template-form" onSubmit={(event) => void submitTemplate(event)}>
+            <label>
+              <span>Template name</span>
+              <input
+                value={name}
+                onChange={(event) =>
+                  setName(event.target.value.toLowerCase().replace(/\s+/g, '_'))
+                }
+                placeholder="nexthop_order_ready"
+                maxLength={512}
+                aria-describedby="template-name-help"
+                required
+              />
+              <small id="template-name-help">
+                Start with a lowercase letter; then use letters, numbers or
+                underscores (maximum 512 characters).
+              </small>
+            </label>
+            <div className="template-field-row">
+              <label>
+                <span>Category</span>
+                <select value={category} onChange={(event) => setCategory(event.target.value)}>
+                  <option value="UTILITY">Utility</option>
+                  <option value="MARKETING">Marketing</option>
+                </select>
+              </label>
+              <label>
+                <span>Language</span>
+                <select value={language} onChange={(event) => setLanguage(event.target.value)}>
+                  <option value="en_GB">English (UK)</option>
+                  <option value="en_US">English (US)</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              <span>Message body</span>
+              <textarea
+                value={body}
+                onChange={(event) => setBody(event.target.value)}
+                placeholder="Your NextHop order {{1}} is ready for collection."
+                rows={5}
+                required
+              />
+              <small>Use numbered variables such as {'{{1}}'}, {'{{2}}'}.</small>
+            </label>
+            {variableNumbers.length > 0 && (
+              <fieldset className="variable-examples">
+                <legend>Example values for Meta review</legend>
+                <p>Meta uses these examples to understand your variables.</p>
+                <div className="example-grid">
+                  {variableNumbers.map((number) => (
+                    <label key={number}>
+                      <span>{`{{${number}}}`}</span>
+                      <input
+                        value={exampleValues[number] || ''}
+                        onChange={(event) =>
+                          setExampleValues((current) => ({
+                            ...current,
+                            [number]: event.target.value
+                          }))
+                        }
+                        placeholder={number === 1 ? 'NH-1001' : 'Example text'}
+                        required
+                      />
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
+            {createState.error && (
+              <p className="inline-warning" role="alert">
+                {createState.error.message}
+              </p>
+            )}
+            <button
+              className="primary-button template-submit"
+              disabled={
+                createState.loading ||
+                !connectionReady ||
+                !templateNameValid ||
+                !body.trim() ||
+                !variablesValid
+              }
+            >
+              {createState.loading ? 'Submitting to Meta…' : 'Create template'}
+            </button>
+          </form>
+        </section>
+
+        <section className="template-list-card" aria-labelledby="template-list-title">
+          <div className="template-list-header">
+            <div className="section-heading">
+              <span className="section-number">02</span>
+              <div>
+                <p className="eyebrow">Meta catalogue</p>
+                <h2 id="template-list-title">Your templates</h2>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="icon-button refresh-templates"
+              aria-label="Refresh templates"
+              title="Refresh templates"
+              disabled={!connection || templatesQuery.loading}
+              onClick={() => void templatesQuery.refetch()}
+            >
+              <Icon name="refresh" />
+            </button>
+          </div>
+          {templatesQuery.loading || connectionsQuery.loading ? (
+            <div className="template-list-state">Loading templates…</div>
+          ) : templatesQuery.error ? (
+            <div className="template-list-state error">
+              <strong>Templates could not be loaded</strong>
+              <p>{templatesQuery.error.message}</p>
+            </div>
+          ) : templates.length === 0 ? (
+            <div className="template-list-state">
+              <span className="empty-template-icon"><Icon name="note" size={22} /></span>
+              <strong>No templates yet</strong>
+              <p>Create your first reusable WhatsApp message.</p>
+            </div>
+          ) : (
+            <div className="template-list">
+              {templates.map((template) => (
+                <article className="template-item" key={template.id}>
+                  <div className="template-item-top">
+                    <span className={`template-status ${template.status.toLowerCase()}`}>
+                      {template.status}
+                    </span>
+                    <small>{template.language.replace('_', '-')}</small>
+                  </div>
+                  <h3>{template.name}</h3>
+                  <p>{template.body}</p>
+                  <footer>
+                    <span>{template.category}</span>
+                    <code>{template.id}</code>
+                  </footer>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
+  )
+}
+
 export default function App() {
   const token = localStorage.getItem('nexthop_token')
   const restaurantId = getRestaurantId(token)
+  const [view, setView] = useState<AppView>('INBOX')
   const [filter, setFilter] = useState<QueueFilter>('ALL')
   const [search, setSearch] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -928,12 +1237,29 @@ export default function App() {
             <small>Restaurant operations</small>
           </span>
         </a>
-        <div className="service-status" role="status">
-          <span className={`activity-pulse ${subscriptionOnline ? '' : 'offline'}`} />
-          <span>
-            <strong>{subscriptionOnline ? 'Live service' : 'Polling mode'}</strong>
-            <small>{subscriptionOnline ? 'Updates are instant' : 'Realtime reconnecting'}</small>
-          </span>
+        <div className="topbar-center">
+          <nav className="view-navigation" aria-label="Restaurant operations">
+            <button
+              type="button"
+              className={view === 'INBOX' ? 'active' : ''}
+              aria-current={view === 'INBOX' ? 'page' : undefined}
+              onClick={() => setView('INBOX')}
+            >
+              Inbox
+            </button>
+            <button
+              type="button"
+              className={view === 'TEMPLATES' ? 'active' : ''}
+              aria-current={view === 'TEMPLATES' ? 'page' : undefined}
+              onClick={() => setView('TEMPLATES')}
+            >
+              Templates
+            </button>
+          </nav>
+          <div className="compact-service-status" role="status">
+            <span className={`activity-pulse ${subscriptionOnline ? '' : 'offline'}`} />
+            <span>{subscriptionOnline ? 'Live' : 'Polling'} · zetahub.co.uk</span>
+          </div>
         </div>
         <div className="operator">
           <button
@@ -980,6 +1306,9 @@ export default function App() {
         </div>
       </header>
 
+      {view === 'TEMPLATES' ? (
+        <TemplatesView token={token} />
+      ) : (
       <main className="workspace">
         <QueuePanel
           conversations={conversations}
@@ -1041,6 +1370,7 @@ export default function App() {
           </section>
         )}
       </main>
+      )}
     </div>
   )
 }
