@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { Order, Restaurant, Rider, User } from './index.js'
+import {
+  Order,
+  Restaurant,
+  Rider,
+  User,
+  WhatsAppConnection,
+  WhatsAppConversation,
+  WhatsAppMessage
+} from './index.js'
 
 describe('database contract', () => {
   it('creates the required geospatial indexes', () => {
@@ -31,5 +39,20 @@ describe('database contract', () => {
         'CANCELLED'
       ])
     )
+  })
+
+  it('enforces tenant and message idempotency for WhatsApp data', () => {
+    expect(WhatsAppConnection.schema.indexes()).toContainEqual([
+      { phoneNumberId: 1 },
+      expect.objectContaining({ unique: true })
+    ])
+    expect(WhatsAppConversation.schema.indexes()).toContainEqual([
+      { connection: 1, customerWaId: 1, purpose: 1 },
+      expect.objectContaining({ unique: true })
+    ])
+    expect(WhatsAppMessage.schema.indexes()).toContainEqual([
+      { metaMessageId: 1 },
+      expect.objectContaining({ unique: true, sparse: true })
+    ])
   })
 })

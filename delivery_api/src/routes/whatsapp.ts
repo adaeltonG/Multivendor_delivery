@@ -2,6 +2,12 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 import { Router, type Request } from 'express'
 import { env } from '../config/env.js'
 import { logger } from '../config/logger.js'
+import { WhatsAppConnection } from '../models/index.js'
+import { processWhatsAppBotMessage } from '../services/whatsapp.bot.js'
+import {
+  persistInboundWhatsAppMessage,
+  updateWhatsAppDeliveryStatus
+} from '../services/whatsapp.gateway.js'
 
 type RawBodyRequest = Request & { rawBody?: Buffer }
 
@@ -46,65 +52,155 @@ whatsappRouter.post('/', (req: RawBodyRequest, res) => {
     return
   }
 
-  const body = req.body as {
-    object?: string
-    entry?: Array<{
-      changes?: Array<{
-        value?: {
-          messages?: Array<{ id?: string; from?: string; type?: string }>
-          statuses?: Array<{
-            id?: string
-            status?: string
-            recipient_id?: string
-            errors?: Array<{
-              code?: number
-              title?: string
-              message?: string
-              error_data?: {
-                details?: string
-              }
-            }>
-          }>
-        }
-      }>
-    }>
-  }
+  const body = req.body as Record<string, any>
 
   if (body.object !== 'whatsapp_business_account') {
     res.sendStatus(404)
     return
   }
 
+  void persistWhatsAppWebhook(body)
+    .then(botJobs => {
+      res.sendStatus(200)
+      for (const job of botJobs) {
+        void processWhatsAppBotMessage(job.conversationId, job.message).catch(error => {
+          logger.error(
+            { error, conversationId: job.conversationId },
+            'WhatsApp bot processing failed'
+          )
+        })
+      }
+    })
+    .catch(error => {
+      logger.error({ error }, 'WhatsApp webhook persistence failed')
+      res.sendStatus(500)
+    })
+})
+
+function inboundText(message: Record<string, any>): string {
+  if (message.type === 'text') return String(message.text?.body ?? '')
+  if (message.type === 'interactive') {
+    return String(
+      message.interactive?.button_reply?.title ??
+        message.interactive?.list_reply?.title ??
+        ''
+    )
+  }
+  if (message.type === 'location') {
+    return String(message.location?.name ?? message.location?.address ?? 'Shared location')
+  }
+  return ''
+}
+
+function interactiveId(message: Record<string, any>): string | undefined {
+  if (message.type !== 'interactive') return undefined
+  return (
+    message.interactive?.button_reply?.id ??
+    message.interactive?.list_reply?.id
+  )
+}
+
+export async function persistWhatsAppWebhook(body: Record<string, any>) {
+  const botJobs: Array<{
+    conversationId: string
+    message: {
+      type: string
+      text?: string
+      interactiveId?: string
+      latitude?: number
+      longitude?: number
+    }
+  }> = []
   for (const entry of body.entry ?? []) {
     for (const change of entry.changes ?? []) {
-      for (const message of change.value?.messages ?? []) {
-        logger.info(
-          {
-            messageId: message.id,
-            senderSuffix: message.from?.slice(-4),
-            messageType: message.type
-          },
-          'WhatsApp inbound message received'
-        )
-      }
-      for (const status of change.value?.statuses ?? []) {
+      const value = change.value ?? {}
+      const phoneNumberId = value.metadata?.phone_number_id
+      const connection =
+        typeof phoneNumberId === 'string'
+          ? await WhatsAppConnection.findOne({
+              phoneNumberId,
+              isActive: true
+            })
+          : null
+
+      for (const status of value.statuses ?? []) {
+        const errors = (status.errors ?? []).map((error: any) => ({
+          code: error.code,
+          title: error.title,
+          message: error.message,
+          details: error.error_data?.details
+        }))
+        if (status.id) {
+          await updateWhatsAppDeliveryStatus({
+            metaMessageId: status.id,
+            status: status.status,
+            error: errors.length ? JSON.stringify(errors) : undefined
+          })
+        }
         logger.info(
           {
             messageId: status.id,
             deliveryStatus: status.status,
             recipientSuffix: status.recipient_id?.slice(-4),
-            errors: status.errors?.map(error => ({
-              code: error.code,
-              title: error.title,
-              message: error.message,
-              details: error.error_data?.details
-            }))
+            errors
           },
           'WhatsApp delivery status received'
         )
       }
+
+      for (const message of value.messages ?? []) {
+        if (!connection) {
+          logger.warn(
+            { phoneNumberId, messageId: message.id },
+            'Inbound message has no active WhatsApp connection'
+          )
+          continue
+        }
+        if (!message.id || !message.from) continue
+        const contact = (value.contacts ?? []).find(
+          (candidate: any) => candidate.wa_id === message.from
+        )
+        const persisted = await persistInboundWhatsAppMessage({
+          connectionId: connection.id,
+          customerWaId: message.from,
+          customerName: contact?.profile?.name,
+          metaMessageId: message.id,
+          type: message.type ?? 'unknown',
+          text: inboundText(message),
+          payload: message
+        })
+        logger.info(
+          {
+            messageId: message.id,
+            connectionId: connection.id,
+            restaurantId: persisted.conversation.restaurant?.toString(),
+            senderSuffix: message.from.slice(-4),
+            messageType: message.type,
+            duplicate: persisted.duplicate
+          },
+          'WhatsApp inbound message received'
+        )
+        if (!persisted.duplicate) {
+          botJobs.push({
+            conversationId: persisted.conversation.id,
+            message: {
+              type: message.type ?? 'unknown',
+              text: inboundText(message),
+              interactiveId: interactiveId(message),
+              latitude: message.location?.latitude,
+              longitude: message.location?.longitude
+            }
+          })
+        }
+      }
     }
   }
+  return botJobs
+}
 
-  res.sendStatus(200)
-})
+export async function processWhatsAppWebhook(body: Record<string, any>) {
+  const jobs = await persistWhatsAppWebhook(body)
+  await Promise.all(
+    jobs.map(job => processWhatsAppBotMessage(job.conversationId, job.message))
+  )
+}

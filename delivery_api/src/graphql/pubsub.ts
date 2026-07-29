@@ -10,7 +10,9 @@ export const EVENTS = {
   ZONE_ORDER: 'ZONE_ORDER',
   RIDER_ASSIGNED: 'RIDER_ASSIGNED',
   RIDER_LOCATION: 'RIDER_LOCATION',
-  CHAT_MESSAGE: 'CHAT_MESSAGE'
+  CHAT_MESSAGE: 'CHAT_MESSAGE',
+  WHATSAPP_MESSAGE: 'WHATSAPP_MESSAGE',
+  WHATSAPP_CONVERSATION: 'WHATSAPP_CONVERSATION'
 } as const
 
 export const topics = {
@@ -21,5 +23,9 @@ export const topics = {
   zoneOrder: (zoneId: string) => `${EVENTS.ZONE_ORDER}:${zoneId}`,
   riderAssigned: (riderId: string) => `${EVENTS.RIDER_ASSIGNED}:${riderId}`,
   riderLocation: (riderId: string) => `${EVENTS.RIDER_LOCATION}:${riderId}`,
-  chat: (orderId: string) => `${EVENTS.CHAT_MESSAGE}:${orderId}`
+  chat: (orderId: string) => `${EVENTS.CHAT_MESSAGE}:${orderId}`,
+  whatsappMessage: (restaurantId: string) =>
+    `${EVENTS.WHATSAPP_MESSAGE}:${restaurantId}`,
+  whatsappConversation: (restaurantId: string) =>
+    `${EVENTS.WHATSAPP_CONVERSATION}:${restaurantId}`
 }

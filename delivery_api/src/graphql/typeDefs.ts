@@ -939,6 +939,91 @@ export const typeDefs = `#graphql
   input VerificationConfigurationInput { skipEmailVerification: Boolean, skipMobileVerification: Boolean }
   input CurrencyConfigurationInput { currency: String, currencySymbol: String }
 
+  enum WhatsAppConversationStatus {
+    BOT
+    MANUAL
+    CLOSED
+  }
+
+  enum WhatsAppBotState {
+    WELCOME
+    SELECTING_RESTAURANT
+    BROWSING_MENU
+    VIEWING_CART
+    AWAITING_ADDRESS
+    AWAITING_LOCATION
+    AWAITING_PAYMENT
+    ORDER_CREATED
+  }
+
+  type WhatsAppConnection {
+    _id: ID!
+    restaurant: ID
+    phoneNumberId: String!
+    whatsappBusinessAccountId: String!
+    displayPhoneNumber: String!
+    verifiedName: String!
+    accessTokenConfigured: Boolean!
+    isActive: Boolean!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
+  type WhatsAppCartItem {
+    foodId: ID!
+    variationId: ID!
+    title: String!
+    quantity: Int!
+    unitPrice: Float!
+  }
+
+  type WhatsAppConversation {
+    _id: ID!
+    connection: ID!
+    restaurant: ID
+    customerWaId: String!
+    customerName: String!
+    purpose: String!
+    status: WhatsAppConversationStatus!
+    botState: WhatsAppBotState!
+    cart: [WhatsAppCartItem!]!
+    deliveryAddress: String!
+    paymentMethod: String!
+    order: Order
+    unreadCount: Int!
+    lastMessagePreview: String!
+    lastMessageAt: DateTime!
+    lastInboundAt: DateTime
+    lastOutboundAt: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
+  type WhatsAppMessage {
+    _id: ID!
+    conversation: ID!
+    restaurant: ID
+    metaMessageId: String
+    direction: String!
+    type: String!
+    text: String!
+    payload: JSON
+    status: String!
+    error: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
+  input WhatsAppConnectionInput {
+    restaurantId: ID
+    phoneNumberId: String!
+    whatsappBusinessAccountId: String
+    displayPhoneNumber: String
+    verifiedName: String
+    accessToken: String
+    isActive: Boolean
+  }
+
   type Query {
     users: [User!]!
     profile: User
@@ -997,6 +1082,9 @@ export const typeDefs = `#graphql
     getDashboardSales(starting_date: String, ending_date: String, restaurant: String!): DashboardSeries!
     getDashboardOrders(starting_date: String, ending_date: String, restaurant: String!): DashboardSeries!
     getDashboardData(starting_date: String, ending_date: String): DashboardData!
+    whatsappConnections(restaurantId: ID): [WhatsAppConnection!]!
+    whatsappConversations(restaurantId: ID, status: WhatsAppConversationStatus, limit: Int, offset: Int): [WhatsAppConversation!]!
+    whatsappMessages(conversationId: ID!, limit: Int, before: DateTime): [WhatsAppMessage!]!
   }
 
   type Mutation {
@@ -1110,6 +1198,12 @@ export const typeDefs = `#graphql
     saveTwilioConfiguration(configurationInput: TwilioConfigurationInput!): Configuration!
     saveVerificationsToggle(configurationInput: VerificationConfigurationInput!): Configuration!
     saveCurrencyConfiguration(configurationInput: CurrencyConfigurationInput!): Configuration!
+    upsertWhatsAppConnection(input: WhatsAppConnectionInput!): WhatsAppConnection!
+    takeOverWhatsAppConversation(conversationId: ID!): WhatsAppConversation!
+    releaseWhatsAppConversationToBot(conversationId: ID!): WhatsAppConversation!
+    closeWhatsAppConversation(conversationId: ID!): WhatsAppConversation!
+    markWhatsAppConversationRead(conversationId: ID!): WhatsAppConversation!
+    sendWhatsAppInboxMessage(conversationId: ID!, text: String!): WhatsAppMessage!
   }
 
   type Subscription {
@@ -1121,5 +1215,7 @@ export const typeDefs = `#graphql
     subscriptionAssignRider(riderId: String!): OrderEvent!
     subscriptionRiderLocation(riderId: String!): Rider!
     subscriptionNewMessage(order: ID!): ChatMessage!
+    whatsappMessageAdded(restaurantId: ID): WhatsAppMessage!
+    whatsappConversationUpdated(restaurantId: ID): WhatsAppConversation!
   }
 `

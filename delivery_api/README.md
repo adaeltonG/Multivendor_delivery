@@ -21,7 +21,8 @@ this repository.
   `graphql-ws` protocol during migration.
 
 Third-party delivery is deliberately separated from the core API. WhatsApp Cloud
-API transactional notifications are implemented as an optional provider adapter.
+API transactional notifications, persisted conversations, interactive ordering,
+and restaurant inbox operations are implemented as an optional provider adapter.
 Real OTP/email delivery, push notifications, Stripe/PayPal account creation, and
 Cloudinary uploads still require provider-specific adapters before production.
 
@@ -52,8 +53,38 @@ Hi {{1}}, order {{2}} is ready for you at {{3}}. Pickup: {{4}}.
 ```
 
 The API verifies `X-Hub-Signature-256` on webhook POST requests and immediately
-acknowledges valid Meta events. Notification delivery runs asynchronously:
-WhatsApp outages are logged but never roll back an order operation.
+acknowledges valid Meta events. It resolves `metadata.phone_number_id` through a
+`WhatsAppConnection`, stores inbound and outbound messages, updates delivery
+receipts, and publishes restaurant-scoped GraphQL subscriptions.
+
+Register the existing Meta number against a restaurant after deployment:
+
+```bash
+WHATSAPP_DEFAULT_RESTAURANT_ID=YOUR_MONGODB_RESTAURANT_ID npm run whatsapp:register
+```
+
+For additional restaurants, call the authenticated
+`upsertWhatsAppConnection` GraphQL mutation. Per-restaurant access tokens are
+encrypted with AES-256-GCM; set `WHATSAPP_TOKEN_ENCRYPTION_KEY` to the output of
+`openssl rand -hex 32`. The first connection may continue using the server-wide
+`WHATSAPP_ACCESS_TOKEN` when its phone-number ID matches
+`WHATSAPP_PHONE_NUMBER_ID`.
+
+The bot supports shared-number restaurant selection, menu lists, cart handling,
+typed address plus WhatsApp location collection, COD/card selection, order
+creation, and manual takeover. Card orders remain payment-pending until a Stripe
+Checkout adapter sends and confirms a secure payment link.
+
+The restaurant inbox uses:
+
+- `whatsappConnections`, `whatsappConversations`, and `whatsappMessages`
+- `takeOverWhatsAppConversation`, `releaseWhatsAppConversationToBot`,
+  `closeWhatsAppConversation`, `markWhatsAppConversationRead`, and
+  `sendWhatsAppInboxMessage`
+- `whatsappMessageAdded` and `whatsappConversationUpdated` subscriptions
+
+Notification delivery runs asynchronously: WhatsApp outages are persisted as
+failed messages and logged, but never roll back an order operation.
 
 ## Run locally
 

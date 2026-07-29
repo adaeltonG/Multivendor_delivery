@@ -16,6 +16,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "migrate": "tsx src/scripts/migrate.ts",
     "seed": "tsx src/scripts/seed.ts",
+    "whatsapp:register": "tsx src/scripts/register-whatsapp.ts",
     "test": "vitest run"
   },
   "dependencies": {

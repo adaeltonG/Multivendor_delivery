@@ -17,6 +17,7 @@ const envSchema = z.object({
   WHATSAPP_PHONE_NUMBER_ID: z.string().default(''),
   WHATSAPP_VERIFY_TOKEN: z.string().default(''),
   WHATSAPP_APP_SECRET: z.string().default(''),
+  WHATSAPP_TOKEN_ENCRYPTION_KEY: z.string().default(''),
   WHATSAPP_GRAPH_API_VERSION: z.string().regex(/^v\d+\.\d+$/).default('v25.0'),
   WHATSAPP_TEMPLATE_LANGUAGE: z.string().default('en_GB'),
   WHATSAPP_ORDER_CREATED_TEMPLATE: z.string().default('zetahub_new_order'),
