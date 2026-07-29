@@ -21,9 +21,11 @@ import {
   MESSAGE_ADDED,
   MESSAGES,
   RESTAURANT_LOGIN,
+  RESTAURANT_STATUS,
   RELEASE,
   SEND,
-  TAKE_OVER
+  TAKE_OVER,
+  TOGGLE_RESTAURANT_AVAILABILITY
 } from './graphql'
 import type {
   Conversation,
@@ -76,6 +78,24 @@ const money = (value?: number | null) =>
     currency: 'GBP'
   }).format(value || 0)
 
+const getRestaurantId = (token: string | null) => {
+  const storedId = localStorage.getItem('nexthop_restaurant_id')
+  if (storedId) return storedId
+  if (!token) return null
+
+  try {
+    const encodedPayload = token.split('.')[1]
+    const base64 = encodedPayload
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
+      .padEnd(Math.ceil(encodedPayload.length / 4) * 4, '=')
+    const payload = JSON.parse(atob(base64)) as { restaurantId?: unknown }
+    return typeof payload.restaurantId === 'string' ? payload.restaurantId : null
+  } catch {
+    return null
+  }
+}
+
 function Icon({
   name,
   size = 18
@@ -113,9 +133,9 @@ function Icon({
 function AuthRequired() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [login, loginState] = useMutation<{ restaurantLogin: { token: string } }>(
-    RESTAURANT_LOGIN
-  )
+  const [login, loginState] = useMutation<{
+    restaurantLogin: { token: string; restaurantId?: string | null }
+  }>(RESTAURANT_LOGIN)
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
@@ -125,6 +145,10 @@ function AuthRequired() {
     const token = result.data?.restaurantLogin.token
     if (token) {
       localStorage.setItem('nexthop_token', token)
+      const restaurantId = result.data?.restaurantLogin.restaurantId
+      if (restaurantId) {
+        localStorage.setItem('nexthop_restaurant_id', restaurantId)
+      }
       window.location.reload()
     }
   }
@@ -133,7 +157,7 @@ function AuthRequired() {
     <main className="auth-shell">
       <section className="auth-card" aria-labelledby="auth-title">
         <div className="auth-mark">
-          <img src="./nexthop-logo.png" alt="" />
+          <img src={`${import.meta.env.BASE_URL}nexthop-logo.png`} alt="" />
         </div>
         <p className="eyebrow">NextHop operations</p>
         <h1 id="auth-title">Your service desk is locked.</h1>
@@ -165,7 +189,10 @@ function AuthRequired() {
           </label>
           {loginState.error && (
             <p className="auth-error" role="alert">
-              Sign-in failed. Check your restaurant username and password.
+              {loginState.error.message.includes('status code 500') ||
+              loginState.error.message.includes('Failed to fetch')
+                ? 'Cannot reach the NextHop API. Restart the local development server and try again.'
+                : `Sign-in failed: ${loginState.error.message}`}
             </p>
           )}
           <button className="primary-button" disabled={loginState.loading}>
@@ -681,6 +708,7 @@ function Workspace({
 
 export default function App() {
   const token = localStorage.getItem('nexthop_token')
+  const restaurantId = getRestaurantId(token)
   const [filter, setFilter] = useState<QueueFilter>('ALL')
   const [search, setSearch] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -698,6 +726,31 @@ export default function App() {
       notifyOnNetworkStatusChange: true
     }
   )
+
+  const restaurantStatusQuery = useQuery<{
+    restaurant: {
+      _id: string
+      name: string
+      isAvailable: boolean
+    } | null
+  }>(RESTAURANT_STATUS, {
+    variables: { id: restaurantId },
+    skip: !token || !restaurantId
+  })
+
+  const [toggleRestaurantAvailability, availabilityState] = useMutation<{
+    toggleAvailability: {
+      _id: string
+      name: string
+      isAvailable: boolean
+    }
+  }>(TOGGLE_RESTAURANT_AVAILABILITY, {
+    onCompleted: ({ toggleAvailability }) => {
+      restaurantStatusQuery.updateQuery(() => ({
+        restaurant: toggleAvailability
+      }))
+    }
+  })
 
   const allConversations = conversationsQuery.data?.whatsappConversations || []
   const conversations = useMemo(() => {
@@ -862,12 +915,14 @@ export default function App() {
     releaseState.loading ||
     closeState.loading ||
     sendState.loading
+  const restaurant = restaurantStatusQuery.data?.restaurant
+  const acceptingOrders = restaurant?.isAvailable ?? false
 
   return (
     <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="/" aria-label="NextHop home">
-          <img src="./nexthop-logo.png" alt="" />
+          <img src={`${import.meta.env.BASE_URL}nexthop-logo.png`} alt="" />
           <span>
             <strong>NextHop</strong>
             <small>Restaurant operations</small>
@@ -881,6 +936,32 @@ export default function App() {
           </span>
         </div>
         <div className="operator">
+          <button
+            type="button"
+            className={`availability-toggle ${acceptingOrders ? 'online' : 'offline'}`}
+            role="switch"
+            aria-checked={acceptingOrders}
+            aria-label={
+              acceptingOrders
+                ? 'Pause new restaurant orders'
+                : 'Start accepting restaurant orders'
+            }
+            title={availabilityState.error?.message}
+            disabled={
+              !restaurant ||
+              restaurantStatusQuery.loading ||
+              availabilityState.loading
+            }
+            onClick={() => void toggleRestaurantAvailability()}
+          >
+            <span className="availability-track" aria-hidden="true">
+              <span className="availability-thumb" />
+            </span>
+            <span className="availability-copy">
+              <strong>{acceptingOrders ? 'Accepting orders' : 'Orders paused'}</strong>
+              <small>{availabilityState.loading ? 'Updating…' : restaurant?.name || 'Restaurant'}</small>
+            </span>
+          </button>
           <span className="operator-copy">
             <strong>Service desk</strong>
             <small>Restaurant team</small>
@@ -890,6 +971,7 @@ export default function App() {
             className="logout-button"
             onClick={() => {
               localStorage.removeItem('nexthop_token')
+              localStorage.removeItem('nexthop_restaurant_id')
               window.location.reload()
             }}
           >

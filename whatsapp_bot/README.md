@@ -26,6 +26,10 @@ VITE_GRAPHQL_URL=https://zetahub.co.uk/api/graphql
 VITE_GRAPHQL_WS_URL=wss://zetahub.co.uk/api/graphql
 ```
 
+By default, the Vite development server proxies `/api` requests and WebSocket
+connections to `https://zetahub.co.uk`, so a local `.env` is not required when
+testing against the deployed backend.
+
 The sign-in form calls the backend `restaurantLogin` mutation and stores only
 the returned JWT under `localStorage.nexthop_token`. Passwords are never stored.
 

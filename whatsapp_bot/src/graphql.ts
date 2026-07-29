@@ -4,6 +4,27 @@ export const RESTAURANT_LOGIN = gql`
   mutation RestaurantLogin($username: String!, $password: String!) {
     restaurantLogin(username: $username, password: $password) {
       token
+      restaurantId
+    }
+  }
+`
+
+export const RESTAURANT_STATUS = gql`
+  query RestaurantStatus($id: String!) {
+    restaurant(id: $id) {
+      _id
+      name
+      isAvailable
+    }
+  }
+`
+
+export const TOGGLE_RESTAURANT_AVAILABILITY = gql`
+  mutation ToggleRestaurantAvailability {
+    toggleAvailability {
+      _id
+      name
+      isAvailable
     }
   }
 `
