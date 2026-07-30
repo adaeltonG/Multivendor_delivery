@@ -9,6 +9,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   CORS_ORIGINS: z.string().default('*'),
   GRAPHQL_PATH: z.string().startsWith('/').default('/graphql'),
+  GOOGLE_OAUTH_CLIENT_IDS: z.string().default(''),
   WHATSAPP_ENABLED: z
     .enum(['true', 'false'])
     .default('false')
@@ -63,4 +64,8 @@ if (!parsed.success) {
 export const env = parsed.data
 export const allowedOrigins = env.CORS_ORIGINS.split(',')
   .map(origin => origin.trim())
+  .filter(Boolean)
+
+export const googleOAuthClientIds = env.GOOGLE_OAUTH_CLIENT_IDS.split(',')
+  .map(clientId => clientId.trim())
   .filter(Boolean)

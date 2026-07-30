@@ -11,7 +11,8 @@ const ConfigurableValues = () => {
     process.env.REACT_APP_WS_SERVER_URL || "wss://zetahub.co.uk/api/";
 
   
-  const GOOGLE_CLIENT_ID = configuration?.webClientID;
+  const GOOGLE_CLIENT_ID =
+    process.env.REACT_APP_GOOGLE_WEB_CLIENT_ID || configuration?.webClientID;
   const STRIPE_PUBLIC_KEY = configuration?.publishableKey;
   const PAYPAL_KEY = configuration?.clientId;
   const GOOGLE_MAPS_KEY = configuration?.googleApiKey;

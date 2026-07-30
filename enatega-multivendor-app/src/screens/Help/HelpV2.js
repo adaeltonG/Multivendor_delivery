@@ -20,19 +20,19 @@ const Help = props => {
   const [links, setLinks] = useState([
     {
       title: t('titleProductPage'),
-      url: 'https://enatega.com/enatega-multi-vendor/'
+      url: 'https://zetahub.co.uk/'
     },
     {
       title: t('titleDocs'),
-      url: 'https://enatega.com/multi-vendor-doc/'
+      url: 'https://zetahub.co.uk/terms.html'
     },
     {
       title: t('titleBlog'),
-      url: 'https://enatega.com/blog/'
+      url: 'https://zetahub.co.uk/'
     },
     {
       title: t('titleAboutUs'),
-      url: 'https://ninjascode.com/about-us/'
+      url: 'https://zetahub.co.uk/'
     }
   ])
 
@@ -49,21 +49,21 @@ const Help = props => {
       {
         title: t('titleProductPage'),
         url:
-          'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
+          'https://zetahub.co.uk/'
       },
       {
         title: t('titleDocs'),
-        url: 'https://enatega.com/multivendor-documentation/'
+        url: 'https://zetahub.co.uk/terms.html'
       },
       {
         title: t('titleBlog'),
         url:
-          'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
+          'https://zetahub.co.uk/'
       },
       {
         title: t('titleAboutUs'),
 
-        url: 'https://ninjascode.com/'
+        url: 'https://zetahub.co.uk/'
       }
     ])
   }, [])

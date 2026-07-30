@@ -1,1 +1,5 @@
-# This is used for only deployment purposed to see the main code use this link https://github.com/Ninjas-Code-official/Marketplace-Food-Delivery-Solution
+# NextHop customer web application
+
+The production customer web frontend for NextHop.
+
+Repository: https://github.com/adaeltonG/Multivendor_delivery

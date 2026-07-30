@@ -1,6 +1,6 @@
 {
-  "short_name": "Enatega",
-  "name": "Enatega-Food Delivery",
+  "short_name": "NextHop",
+  "name": "NextHop Food Delivery",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#0f4a3d",
+  "background_color": "#f4f8f5"
 }

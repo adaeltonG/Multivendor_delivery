@@ -34,6 +34,7 @@ import { Feather } from '@expo/vector-icons'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
 import { MaterialIcons } from '@expo/vector-icons'
 import { fetchAddressFromCoordinates } from '../../utils/geocoding'
+import useEnvVars from '../../../environment'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -41,6 +42,7 @@ const LATITUDE_DELTA = 40
 const LONGITUDE_DELTA = 40
 
 export default function AddNewAddress(props) {
+  const { GOOGLE_MAPS_KEY } = useEnvVars()
   const [searchModalVisible, setSearchModalVisible] = useState(false)
   const [selectedCity, setSelectedCity] = useState('')
   const [customAddress, setCustomAddress] = useState('')
@@ -140,7 +142,8 @@ export default function AddNewAddress(props) {
         // Now, fetch the address based on the obtained coordinates
         const { formattedAddress, city } = await fetchAddressFromCoordinates(
           latitude,
-          longitude
+          longitude,
+          GOOGLE_MAPS_KEY
         )
 
         // Update the customAddress state with the current location address

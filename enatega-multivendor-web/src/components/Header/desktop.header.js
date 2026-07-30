@@ -13,7 +13,7 @@ import { ReactComponent as PersonIcon } from "../../assets/icons/user.svg";
 import { ReactComponent as FavoriteBorderIcon } from "../../assets/icons/favourite.svg";
 import { ReactComponent as LocalMallIcon } from "../../assets/icons/cart.svg";
 
-import { ReactComponent as Logo } from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 
 function DHeader({
   navitems,
@@ -47,7 +47,7 @@ function DHeader({
           }
           className={classes.linkDecoration}
         >
-          <Logo height={50} width={50} />
+          <img src={logo} alt="NextHop" height={50} width={50} />
 
           <Typography
             variant="h6"

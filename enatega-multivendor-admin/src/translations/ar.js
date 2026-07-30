@@ -75,7 +75,7 @@ const ar = {
     'Delivery Rate': 'سعر التوصيل',
     'Currency Symbol': 'رمز العملة',
     enterYourDetailsBelow: 'أدخل تفاصيلك أدناه',
-    LogintoEnatega: 'تسجيل الدخول إلى Enatega',
+    LogintoNextHop: 'تسجيل الدخول إلى NextHop',
     RememberMe: 'تذكرني',
     ForgotYourPassword: 'نسيت كلمة المرور؟',
     errorWhileSaving: 'حدث خطأ أثناء الحفظ، حاول مرة أخرى',
@@ -96,7 +96,7 @@ const ar = {
     ChooseSymbol: 'اختيار الرمز',
     PHMail: 'على سبيل المثال، something@email.com',
     EmailName: 'اسم البريد الإلكتروني',
-    PHEnatega: 'على سبيل المثال، Enatega',
+    PHNextHop: 'على سبيل المثال، NextHop',
     PHFood: 'على سبيل المثال، FOOD',
     ClientSecretKey: 'مفتاح العميل السري',
     Stripe: 'شريط',
@@ -115,9 +115,9 @@ const ar = {
     LoadingDots: 'جار التحميل ...',
     ErrorDots: 'خطأ ...',
     NewAddon: 'إضافة جديدة',
-    EnategaMultivendor: 'Enatega Multivendor',
+    NextHopMultivendor: 'NextHop Multivendor',
     ResetPassword: 'إعادة تعيين كلمة المرور',
-    EnategaDashboard: 'لوحة تحكم Enatega',
+    NextHopDashboard: 'لوحة تحكم NextHop',
     UpdateOption: 'تحديث الخيار',
     AddOption: 'إضافة الخيار',
     OrderStatusUpdated: 'تم تحديث حالة الطلب',
@@ -300,18 +300,17 @@ const ar = {
     DELIVERED: 'تم التسليم',
     REJECTED: 'تم رفضه',
     UploadaLogo: 'تحميل الشعار',
-    "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
-    "Failed to update status!": "!فشل تحديث الحالة",
-    "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
-    "Failed to update status!": "!فشل تحديث الحالة",
-    UpdateSuccessful: "!تم التحديث بنجاح",
-    UpdateError:' خطأ في التحديث',
-    "The value Should not be in the negative":" يجب أن لا يكون القيمة سالبة",
+    'Status updated to {{status}}': 'تم تحديث الحالة إلى {{status}}',
+    'Failed to update status!': '!فشل تحديث الحالة',
+    'Status updated to {{status}}': 'تم تحديث الحالة إلى {{status}}',
+    'Failed to update status!': '!فشل تحديث الحالة',
+    UpdateSuccessful: '!تم التحديث بنجاح',
+    UpdateError: ' خطأ في التحديث',
+    'The value Should not be in the negative': ' يجب أن لا يكون القيمة سالبة',
 
-    "CostType": "نوع التكلفة",
-    "PerKM": "لكل كيلومتر",
-    "FixedCost": "تكلفة ثابتة"
-
+    CostType: 'نوع التكلفة',
+    PerKM: 'لكل كيلومتر',
+    FixedCost: 'تكلفة ثابتة'
   }
 }
 

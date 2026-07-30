@@ -80,7 +80,7 @@ const de = {
     'Delivery Rate': 'Lieferpreis',
     'Currency Symbol': 'Währungssymbol',
     enterYourDetailsBelow: 'Geben Sie Ihre Details unten ein',
-    LogintoEnatega: 'Einloggen bei Enatega',
+    LogintoNextHop: 'Einloggen bei NextHop',
     RememberMe: 'Erinnere dich an mich',
     ForgotYourPassword: 'Passwort vergessen?',
     errorWhileSaving:
@@ -103,7 +103,7 @@ const de = {
     ChooseSymbol: 'Symbol wählen',
     PHMail: 'z.B. something@email.com',
     EmailName: 'E-Mail-Name',
-    PHEnatega: 'z.B. Enatega',
+    PHNextHop: 'z.B. NextHop',
     PHFood: 'z.B. ESSEN',
     ClientSecretKey: 'Geheimer Client-Schlüssel',
     Stripe: 'Stripe',
@@ -122,9 +122,9 @@ const de = {
     LoadingDots: 'Laden ...',
     ErrorDots: 'Fehler ...',
     NewAddon: 'Neue Erweiterung',
-    EnategaMultivendor: 'Enatega Multivendor',
+    NextHopMultivendor: 'NextHop Multivendor',
     ResetPassword: 'Passwort zurücksetzen',
-    EnategaDashboard: 'Enatega-Dashboard',
+    NextHopDashboard: 'NextHop-Dashboard',
     UpdateOption: 'Option aktualisieren',
     AddOption: 'Option hinzufügen',
     OrderStatusUpdated: 'Bestellstatus aktualisiert',
@@ -312,17 +312,17 @@ const de = {
     DELIVERED: 'BEZORGD',
     REJECTED: 'AFGEWEZEN',
     UploadaLogo: 'Ein Logo hochladen',
-    "Status updated to {{status}}": "Status bijgewerkt naar {{status}}",
-    StatusUpdated: "Status bijgewerkt!",
-    "Failed to update status!": "Mislukt om status bij te werken!",
-    UpdateSuccessful: "Update succesvol!",
+    'Status updated to {{status}}': 'Status bijgewerkt naar {{status}}',
+    StatusUpdated: 'Status bijgewerkt!',
+    'Failed to update status!': 'Mislukt om status bij te werken!',
+    UpdateSuccessful: 'Update succesvol!',
     UpdateError: 'Updatefout',
-    "The value Should not be in the negative": "De waarde mag niet negatief zijn",
+    'The value Should not be in the negative':
+      'De waarde mag niet negatief zijn',
 
-    "CostType": "Kostenart",
-    "PerKM": "Pro KM",
-    "FixedCost": "Feste Kosten"
-
+    CostType: 'Kostenart',
+    PerKM: 'Pro KM',
+    FixedCost: 'Feste Kosten'
   }
 }
 

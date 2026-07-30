@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { GoogleLogin } from "react-google-login";
-import { gapi } from 'gapi-script';
+import {
+  GoogleLogin,
+  GoogleOAuthProvider,
+} from "@react-oauth/google";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ConfigurableValues from "../../config/constants";
@@ -25,10 +26,6 @@ function Login() {
   const {
     goolgeSuccess,
     authenticationFailure,
-    loading,
-    setLoading,
-    loginButton,
-    loginButtonSetter,
     loginError,
   } = useRegistration();
   const location = useLocation();
@@ -45,27 +42,6 @@ function Login() {
       });
     }
   }, [loginError, showMessage]); // Added showMessage to the dependency array
-
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: GOOGLE_CLIENT_ID,
-        scope: 'email',
-      });
-    }
-    gapi.load('client:auth2', start);
-  }, [GOOGLE_CLIENT_ID]);
-
-  const callGoogle = useCallback(
-    (clickAction) => {
-      if (!loading) {
-        loginButtonSetter("GOOGLE");
-        setLoading(true);
-        clickAction();
-      }
-    },
-    [loading, loginButtonSetter, setLoading] // Added loginButtonSetter and setLoading to the dependency array
-  );
 
   const toggleSnackbar = useCallback(() => {
     setMainError({});
@@ -89,40 +65,28 @@ function Login() {
       >
         {t('signUpOrLogin')}
       </Typography>
-      <GoogleLogin
-        clientId={GOOGLE_CLIENT_ID}
-        render={(renderProps) => (
-          <Button
-            variant="contained"
-            fullWidth
-            disableElevation
-            className={`${classes.gButton} ${classes.btnBase}`}
-            onClick={() => callGoogle(renderProps.onClick)}
-            disabled={renderProps.disabled || loading}
-            startIcon={
-              renderProps.disabled || loading ? (
-                <CircularProgress color="secondary" size={24} />
-              ) : (
-                <GoogleIcon />
-              )
-            }
-          >
-            {loading && loginButton === "GOOGLE" ? null : (
-              <Typography
-                variant="caption"
-                color="textPrimary"
-                align="center"
-                className={`${classes.font700} ${classes.caption} ${classes.btnText}`}
-              >
-                {t('signInWithGoogle')}
-              </Typography>
-            )}
-          </Button>
-        )}
-        onSuccess={goolgeSuccess}
-        onFailure={authenticationFailure}
-        cookiePolicy={"single_host_origin"}
-      />
+      {GOOGLE_CLIENT_ID ? (
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <GoogleLogin
+            onSuccess={goolgeSuccess}
+            onError={authenticationFailure}
+            useOneTap={false}
+            width="400"
+          />
+        </GoogleOAuthProvider>
+      ) : (
+        <Button
+          variant="contained"
+          fullWidth
+          disabled
+          startIcon={<GoogleIcon />}
+          className={`${classes.gButton} ${classes.btnBase}`}
+        >
+          <Typography variant="caption">
+            {t('signInWithGoogle')}
+          </Typography>
+        </Button>
+      )}
 
       <Box
         sx={{

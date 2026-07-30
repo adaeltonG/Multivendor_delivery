@@ -23,7 +23,7 @@ function useRegistration() {
 
   async function onCompleted({ login }) {
     try {
-      if (login.inNewUser) {
+      if (login.isNewUser) {
         await Analytics.identify(
           {
             userId: login.userId,
@@ -87,17 +87,16 @@ function useRegistration() {
 
   const goolgeSuccess = useCallback(
     (response) => {
-      const user = {
-        phone: "",
-        email: response.profileObj.email,
-        password: "",
-        name: response.profileObj.name,
-        picture: response.profileObj.imageUrl,
+      if (!response.credential) {
+        authenticationFailure();
+        return;
+      }
+      mutateLogin({
         type: "google",
-      };
-      mutateLogin(user);
+        googleIdToken: response.credential,
+      });
     },
-    [mutateLogin]
+    [authenticationFailure, mutateLogin]
   );
 
   return {

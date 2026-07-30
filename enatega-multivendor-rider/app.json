@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "Enatega Multivendor Rider",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "name": "NextHop Rider",
+    "description": "NextHop Rider helps delivery partners receive orders, navigate pickups and keep customers updated.",
     "version": "1.1.24",
-    "slug": "food-delivery-rider-multivendor",
+    "slug": "nexthop-rider",
+    "owner": "adaelton",
     "plugins": [
       [
         "expo-updates",
         {
-          "username": "ninjas_code"
+          "username": "adaelton"
         }
       ],
       "expo-font",
@@ -28,18 +29,15 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#6FCF97"
+      "resizeMode": "contain",
+      "backgroundColor": "#EAF6EF"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.enatega.multirider",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
-      },
+      "bundleIdentifier": "uk.co.zetahub.nexthop.rider",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!.",
         "UIBackgroundModes": [
@@ -51,28 +49,14 @@
     },
     "android": {
       "versionCode": 32,
-      "googleServicesFile": "./google-services.json",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ],
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
-        }
-      },
-      "package": "com.enatega.multirider"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743"
-      }
+      "package": "uk.co.zetahub.nexthop.rider"
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/9144a7fc-b205-464a-8fb6-64eb66fc8743"
     }
   }
 }

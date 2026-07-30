@@ -13,7 +13,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import routes from '../../routes'
 import useStyles from './styles'
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import logo from '../../assets/img/brand/logo.png'
 import { useLocation } from 'react-router-dom'
 import { useTranslation, withTranslation } from 'react-i18next'
 
@@ -34,16 +34,15 @@ function AdminSidebar(props) {
     // <Box className={classes.sidebarContainer}>
     <Box className={classes.sidebarBox}>
       <Toolbar className={[classes.rowDisplay, classes.logo]}>
-        <Logo fontSize="small" />
+        <img src={logo} alt="NextHop" width="38" height="38" />
         <Typography
           variant="h2"
           className={[classes.headingText, classes.logoText]}>
-          ENATEGA
+          NextHop
         </Typography>
       </Toolbar>
       <Box className={classes.sidebarList}>
         {routes.map((prop, key) => {
-        
           return prop.appearInSidebar && prop.admin ? (
             <>
               {key === 1 ? (

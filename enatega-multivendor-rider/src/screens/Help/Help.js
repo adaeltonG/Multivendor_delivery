@@ -12,18 +12,18 @@ const links = [
   {
     title: ('productPage'),
     url:
-      'https://market.nativebase.io/view/enatega-multivendor-food-backend-app'
+      'https://zetahub.co.uk/'
   },
   {
     title: ('docs'),
-    url: 'https://enatega-multi.gitbook.io/enatega-multivendor/'
+    url: 'https://zetahub.co.uk/terms.html'
   },
   {
     title: ('blog'),
     url:
-      'https://blog.geekyants.com/enatega-multivendor-foodpanda-clone-v1-0-0-e4b4f21ba1c1'
+      'https://zetahub.co.uk/'
   },
-  { title: ('aboutUs'), url: 'https://ninjascode.com/pages/ourteam.html' }
+  { title: ('aboutUs'), url: 'https://zetahub.co.uk/' }
 ]
 function Help() {
   const {t} = useTranslation()

@@ -17,7 +17,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import routes from '../../routes'
 import useStyles from './styles'
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import logo from '../../assets/img/brand/logo.png'
 import { useLocation } from 'react-router-dom'
 
 const drawerWidth = 240
@@ -40,11 +40,11 @@ function Sidebar(props) {
   const createLinks = (
     <Box className={classes.sidebarBox}>
       <Toolbar className={[classes.rowDisplay, classes.logo]}>
-        <Logo />
+        <img src={logo} alt="NextHop" width="38" height="38" />
         <Typography
           variant="h2"
           className={[classes.headingText, classes.logoText]}>
-          ENATEGA
+          NextHop
         </Typography>
       </Toolbar>
       {restaurantName && restaurantImage ? (
@@ -67,7 +67,6 @@ function Sidebar(props) {
 
       <Box className={classes.sidebarList}>
         {routes.map((prop, key) => {
-          
           if (
             JSON.parse(localStorage.getItem('user-enatega')).userType ===
             'ADMIN'

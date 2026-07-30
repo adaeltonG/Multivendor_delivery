@@ -206,10 +206,10 @@ export default function SideBar() {
             activeOpacity={0.8}
             onPress={() =>
               Linking.canOpenURL(
-                'https://enatega.com/privacy-policy/'
+                'https://zetahub.co.uk/privacy.html'
               ).then(() => {
                 Linking.openURL(
-                  'https://enatega.com/privacy-policy/'
+                  'https://zetahub.co.uk/privacy.html'
                 )
               })
             }>

@@ -44,7 +44,7 @@ export default function Blogs() {
             fontWeight: 700,
             borderRadius: 10,
           }}
-          onClick={() => window.open("https://medium.com/enatega", "_blank")}
+          onClick={() => window.open("https://zetahub.co.uk/", "_blank")}
           variant="contained"
           disableElevation
         >
@@ -140,7 +140,7 @@ function BlogComponent({ title, desc }) {
                 variant="contained"
                 disableElevation
                 onClick={() =>
-                  window.open("https://medium.com/enatega", "_blank")
+                  window.open("https://zetahub.co.uk/", "_blank")
                 }
               >
                 {t("readMore")}

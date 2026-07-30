@@ -50,27 +50,6 @@ export const useCreateAccount = () => {
     iosClientId: IOS_CLIENT_ID_GOOGLE || disabledGoogleClientId
   })
 
-  const getUserInfo = async (token) => {
-    //absent token
-    if (!token) return
-    //present token
-    try {
-      const response = await fetch(
-        'https://www.googleapis.com/userinfo/v2/me',
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
-      return await response.json()
-    } catch (error) {
-      console.error(
-        'Failed to fetch user data:',
-        response.status,
-        response.statusText
-      )
-    }
-  }
-
   const signIn = async () => {
     if (!googleAuthConfigured) {
       FlashMessage({ message: 'Google sign-in is not configured yet' })
@@ -87,20 +66,12 @@ export const useCreateAccount = () => {
   const signInWithGoogle = async () => {
     try {
       if (response?.type === 'success') {
-        const google_user = await getUserInfo(
-          response.authentication.accessToken
-        )
-
-        const userData = {
-          phone: '',
-          email: google_user.email,
-          password: '',
-          name: google_user.name,
-          picture: google_user.picture,
-          type: 'google'
+        const googleIdToken =
+          response.authentication?.idToken || response.params?.id_token
+        if (!googleIdToken) {
+          throw new Error('Google did not return an identity token')
         }
-
-        await mutateLogin(userData)
+        await mutateLogin({ type: 'google', googleIdToken })
       }
     } catch (error) {
       // Handle any errors that occur during AsyncStorage retrieval or other operations
@@ -223,7 +194,7 @@ export const useCreateAccount = () => {
       setLoading(false)
     } else {
       try {
-        if (data.login.inNewUser) {
+        if (data.login.isNewUser) {
           await Analytics.identify(
             {
               userId: data.login.userId

@@ -17,6 +17,7 @@ const userSchema = new Schema(
     phone: { type: String, trim: true, unique: true, sparse: true, index: true },
     password: { type: String, select: false },
     appleId: { type: String, sparse: true, unique: true, select: false },
+    googleId: { type: String, sparse: true, unique: true, select: false },
     userType: { type: String, enum: USER_ROLES, default: 'CUSTOMER', index: true },
     phoneIsVerified: { type: Boolean, default: false },
     emailIsVerified: { type: Boolean, default: false },
@@ -36,6 +37,7 @@ const userSchema = new Schema(
       transform(_doc, ret) {
         delete ret.password
         delete ret.appleId
+        delete ret.googleId
         return ret
       }
     }

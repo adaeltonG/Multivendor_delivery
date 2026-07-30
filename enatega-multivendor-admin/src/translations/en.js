@@ -75,7 +75,7 @@ const en = {
     'Delivery Rate': 'Delivery Rate',
     'Currency Symbol': 'Currency Symbol',
     enterYourDetailsBelow: 'Enter your details below',
-    LogintoEnatega: 'Login to Enatega',
+    LogintoNextHop: 'Login to NextHop',
     RememberMe: 'Remember me',
     ForgotYourPassword: 'Forgot your password?',
     errorWhileSaving: 'An error occured while saving,Try again',
@@ -96,7 +96,7 @@ const en = {
     ChooseSymbol: 'Choose Symbol',
     PHMail: 'e.g something@email.com',
     EmailName: 'Email Name',
-    PHEnatega: 'e.g Enatega',
+    PHNextHop: 'e.g NextHop',
     PHFood: 'e.g FOOD',
     ClientSecretKey: 'Client Secret Key',
     Stripe: 'Stripe',
@@ -119,9 +119,9 @@ const en = {
     LoadingDots: 'Loading ...',
     ErrorDots: 'Error ...',
     NewAddon: 'New Addon',
-    EnategaMultivendor: 'Enatega Multivendor',
+    NextHopMultivendor: 'NextHop Multivendor',
     ResetPassword: 'Reset Password',
-    EnategaDashboard: 'Enatega Dashboard',
+    NextHopDashboard: 'NextHop Dashboard',
     UpdateOption: 'Update Option',
     AddOption: 'Add Option',
     OrderStatusUpdated: 'Order status updated',
@@ -317,17 +317,16 @@ const en = {
     UploadaLogo: 'Upload a logo',
 
     StatusUpdated: 'Status Updated!',
-    "Status updated to {{status}}": "Status updated to {{status}}",
-    "Failed to update status!": "Failed to update status!",
-    UpdateSuccessful: "Update Successful",
-    UpdateError: "Update Error",
-    "The value Should not be in the negative": "The value should not be negative",
+    'Status updated to {{status}}': 'Status updated to {{status}}',
+    'Failed to update status!': 'Failed to update status!',
+    UpdateSuccessful: 'Update Successful',
+    UpdateError: 'Update Error',
+    'The value Should not be in the negative':
+      'The value should not be negative',
 
     CostType: 'Cost Type',
     PerKM: 'Per KM',
-    FixedCost: 'Fixed Cost',
-    
-
+    FixedCost: 'Fixed Cost'
   }
 }
 

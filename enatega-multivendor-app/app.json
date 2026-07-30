@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Enatega Multi",
-    "scheme": "enategamultivendor",
+    "name": "NextHop",
+    "scheme": "nexthop",
     "version": "1.0.57",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "slug": "enategamultivendor",
-    "owner": "ninjas_code",
+    "description": "NextHop makes it simple to discover restaurants, order food and follow deliveries in real time.",
+    "slug": "nexthop",
+    "owner": "adaelton",
     "androidStatusBar": {
       "backgroundColor": "#000000"
     },
@@ -17,8 +17,8 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#90E36D"
+      "resizeMode": "contain",
+      "backgroundColor": "#EAF6EF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -27,10 +27,7 @@
     "ios": {
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
-      "bundleIdentifier": "com.enatega.multivendor",
-      "config": {
-        "googleMapsApiKey": "###### Key #######"
-      },
+      "bundleIdentifier": "uk.co.zetahub.nexthop",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
@@ -38,13 +35,7 @@
           "remote-notification"
         ],
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device.",
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah"
-            ]
-          }
-        ]
+        "CFBundleURLTypes": []
       }
     },
     "notification": {
@@ -52,18 +43,12 @@
       "color": "#90E36D",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
-      "androidCollapsedTitle": "Enatega Multivendor"
+      "androidCollapsedTitle": "NextHop"
     },
     "android": {
       "versionCode": 57,
-      "package": "com.enatega.multivendor",
-      "googleServicesFile": "./google-services.json",
+      "package": "uk.co.zetahub.nexthop",
       "userInterfaceStyle": "automatic",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-        }
-      },
       "permissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -81,7 +66,7 @@
       [
         "expo-updates",
         {
-          "username": "ninjas_code"
+          "username": "adaelton"
         }
       ],
       [
@@ -93,7 +78,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow NextHop to use your location to find nearby restaurants and delivery addresses."
         }
       ],
       "@react-native-community/datetimepicker",
@@ -102,16 +87,13 @@
       "expo-localization",
       "expo-web-browser"
     ],
-    "extra": {
-      "eas": {
-        "projectId": "331d4e5b-b12a-434a-92ec-d6d283dc0e46"
-      }
-    },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
-    "updates": {
-      "url": "https://u.expo.dev/331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+    "extra": {
+      "eas": {
+        "projectId": "50ffaddc-a9d4-432d-be00-d5178f580c7a"
+      }
     }
   }
 }

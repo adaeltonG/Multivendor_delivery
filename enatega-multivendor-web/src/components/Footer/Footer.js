@@ -62,7 +62,7 @@ function Footer() {
             }}
             align="center"
           >
-            Enatega
+            NextHop
           </Typography>
           <Typography
             variant="body2"
@@ -158,14 +158,14 @@ function Footer() {
         >
           <Box
             className={classes.iconContainer}
-            onClick={() => redirectHandler("https://www.facebook.com/enatega/")}
+            onClick={() => redirectHandler("https://zetahub.co.uk/")}
           >
             <FacebookIcon style={{ color: theme.palette.primary.main }} />
           </Box>
           <Box
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
-            onClick={() => redirectHandler("https://twitter.com/NinjasCode1")}
+            onClick={() => redirectHandler("https://zetahub.co.uk/")}
           >
             <TwitterIcon style={{ color: theme.palette.primary.main }} />
           </Box>
@@ -173,7 +173,7 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("https://www.instagram.com/enatega.nb/")
+              redirectHandler("https://zetahub.co.uk/")
             }
           >
             <InstagramIcon style={{ color: theme.palette.primary.main }} />
@@ -192,7 +192,7 @@ function Footer() {
             style={{ marginLeft: 10 }}
             onClick={() =>
               redirectHandler(
-                "https://github.com/Ninjas-Code-official/Marketplace-Food-Delivery-Solution"
+                "https://github.com/adaeltonG/Multivendor_delivery"
               )
             }
           >
@@ -206,7 +206,7 @@ function Footer() {
           {t("poweredBy")}{" "}
         </Typography>
         <Box
-          onClick={() => redirectHandler("https://ninjascode.com/")}
+          onClick={() => redirectHandler("https://zetahub.co.uk/")}
           style={{
             display: "inline-block",
             cursor: "pointer",
@@ -227,7 +227,7 @@ function Footer() {
               marginLeft: "5px",
             }}
           >
-            ninjascode
+            NextHop
           </Typography>
         </Box>
 

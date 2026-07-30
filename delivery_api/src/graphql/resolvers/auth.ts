@@ -13,12 +13,14 @@ import {
   notFound,
   unauthenticated
 } from '../../utils/errors.js'
+import { verifyGoogleIdToken } from '../../services/google-auth.js'
 
 type LoginArgs = {
   email?: string
   password?: string
   type: string
   appleId?: string
+  googleIdToken?: string
   name?: string
   notificationToken?: string
 }
@@ -82,7 +84,47 @@ export const authResolvers = {
     async login(_parent: unknown, args: LoginArgs) {
       let user
       let isNewUser = false
-      if (args.appleId) {
+      if (args.type === 'google') {
+        if (!args.googleIdToken) {
+          badUserInput('Google identity token is required')
+        }
+
+        let identity
+        try {
+          identity = await verifyGoogleIdToken(args.googleIdToken)
+        } catch {
+          unauthenticated('Invalid Google identity token')
+        }
+
+        user = await User.findOne({
+          googleId: identity.subject,
+          userType: 'CUSTOMER'
+        }).select('+googleId')
+
+        if (!user) {
+          user = await User.findOne({
+            email: identity.email,
+            userType: 'CUSTOMER'
+          }).select('+googleId')
+        }
+
+        if (!user) {
+          user = await User.create({
+            googleId: identity.subject,
+            email: identity.email,
+            name: identity.name,
+            emailIsVerified: true,
+            notificationToken: args.notificationToken ?? '',
+            userType: 'CUSTOMER'
+          })
+          isNewUser = true
+        } else {
+          user.googleId = identity.subject
+          user.emailIsVerified = true
+          if (!user.name) user.name = identity.name
+          await user.save()
+        }
+      } else if (args.appleId) {
         user = await User.findOne({ appleId: args.appleId }).select('+appleId')
         if (!user) {
           user = await User.create({

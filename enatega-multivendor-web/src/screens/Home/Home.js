@@ -130,10 +130,10 @@ function Home() {
                         "• "+t('zonesFunctionality'),
                       ]}
                       android={
-                        "https://play.google.com/store/apps/details?id=com.enatega.multirider"
+                        "https://zetahub.co.uk/"
                       }
                       ios={
-                        "https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"
+                        "https://zetahub.co.uk/"
                       }
                       isMobile={true}
                     />
@@ -153,10 +153,10 @@ function Home() {
                         "• "+t('realTimeOrder'),
                       ]}
                       android={
-                        "https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"
+                        "https://zetahub.co.uk/"
                       }
                       ios={
-                        "https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"
+                        "https://zetahub.co.uk/"
                       }
                       isMobile={true}
                     />
@@ -177,10 +177,10 @@ function Home() {
                         "• "+t('previousOrder'),
                       ]}
                       android={
-                        "https://play.google.com/store/apps/details?id=com.enatega.multivendor"
+                        "https://zetahub.co.uk/"
                       }
                       ios={
-                        "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
+                        "https://zetahub.co.uk/"
                       }
                       isMobile={true}
                     />
@@ -197,7 +197,7 @@ function Home() {
                       "• "+t('zonesFunctionality'),
                     ]}
                     web={true}
-                    link={"https://multivendor-admin.enatega.com/"}
+                    link={"https://zetahub.co.uk/"}
                     isMobile={false}
                   />
                 </Grid>
@@ -212,7 +212,7 @@ function Home() {
                         "• "+t('builtOnCommunity'),
                       ]}
                       web={true}
-                      link={"https://enatega.com/"}
+                      link={"https://zetahub.co.uk/"}
                       isMobile={false}
                     />
                   </Box>

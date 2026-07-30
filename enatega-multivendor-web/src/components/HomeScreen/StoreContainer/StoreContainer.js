@@ -40,7 +40,7 @@ function StoreContainer() {
             <Grid item>
               <RouterLink
                 to={{
-                  pathname: "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093",
+                  pathname: "https://zetahub.co.uk/",
                 }}
                 target="_blank"
                 className={classes.linkDecoration}
@@ -57,7 +57,7 @@ function StoreContainer() {
               </RouterLink>
               <RouterLink
                 to={{
-                  pathname: "https://play.google.com/store/apps/details?id=com.enatega.multivendor&hl=en_US&gl=US",
+                  pathname: "https://zetahub.co.uk/",
                 }}
                 target="_blank"
                 className={classes.linkDecoration}

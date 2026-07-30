@@ -119,7 +119,7 @@ function LoginEmail() {
         <Box mt={theme.spacing(2)} />
         <TextField
           name={"userEmail"}
-          defaultValue={state?.email ?? "demo-customer@enatega.com"}
+          defaultValue={state?.email ?? "customer@example.com"}
           error={Boolean(emailError)}
           helperText={emailError}
           fullWidth

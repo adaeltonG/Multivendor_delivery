@@ -1,9 +1,15 @@
 import axios from 'axios'
 
 // Function to fetch address from coordinates using the Google Maps Geocoding API
-export async function fetchAddressFromCoordinates(latitude, longitude) {
+export async function fetchAddressFromCoordinates(
+  latitude,
+  longitude,
+  apiKey
+) {
   try {
-    const apiKey = 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA'
+    if (!apiKey) {
+      throw new Error('Google Maps API key is not configured')
+    }
     const response = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=en`
     )
@@ -39,7 +45,6 @@ export async function fetchAddressFromCoordinates(latitude, longitude) {
 // // Function to fetch address from coordinates using the Google Maps Geocoding API
 // export async function fetchAddressFromCoordinates(latitude, longitude) {
 //   try {
-//     const apiKey = 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA'
 //     const response = await axios.get(
 //       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
 //     )

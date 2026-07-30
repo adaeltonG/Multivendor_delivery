@@ -34,21 +34,21 @@ function AdminFooter(props) {
 
         <Link
           className={classes.link}
-          href="https://multivendor.enatega.com/"
+          href="https://zetahub.co.uk/"
           target="_blank"
           underline="none">
-          {t('EnategaMultivendor')}
+          {t('NextHopMultivendor')}
         </Link>
         <Link
           className={classes.link}
-          href="https://enatega.com/"
+          href="https://zetahub.co.uk/"
           target="_blank"
           underline="none">
           {t('About Us')}
         </Link>
         <Link
           className={classes.link}
-          href="https://enatega.com/blog/"
+          href="https://zetahub.co.uk/"
           target="_blank"
           underline="none">
           {t('Blog')}

@@ -29,6 +29,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.6.1",
+    "google-auth-library": "^10.9.1",
     "graphql": "^17.0.2",
     "graphql-subscriptions": "^3.0.0",
     "graphql-ws": "^6.2.0",

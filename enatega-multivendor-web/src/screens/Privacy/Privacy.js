@@ -36,9 +36,9 @@ function PrivacyPolicy() {
               variant="subtitle2"
               className={classes.MV3}
             >
-              This policy explains how we, enatega, a brand of
+              This policy explains how we, NextHop, a brand of
               <a
-                href="https://enatega.com"
+                href="https://zetahub.co.uk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={classes.linkDecoration}
@@ -48,7 +48,7 @@ function PrivacyPolicy() {
                   color="primary"
                   className={classes.link}
                 >
-                  {"https://enatega.com"}
+                  {"https://zetahub.co.uk"}
                 </Typography>
               </a>
               , use your personal information which you provide to us when using
@@ -156,7 +156,7 @@ function PrivacyPolicy() {
                 color="primary"
                 className={classes.link}
               >
-                {" info@enatega.com"}
+                {" privacy@zetahub.co.uk"}
               </Typography>
             </Typography>
             <Typography variant="subtitle1" className={classes.boldText}>
@@ -171,7 +171,7 @@ function PrivacyPolicy() {
                 color="primary"
                 className={classes.link}
               >
-                {" info@enatega.com"}
+                {" privacy@zetahub.co.uk"}
               </Typography>
               . There will be a small charge for processing this request.
             </Typography>

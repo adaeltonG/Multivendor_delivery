@@ -80,7 +80,7 @@ const fr = {
     'Delivery Rate': 'Frais de livraison',
     'Currency Symbol': 'Symbole de devise',
     enterYourDetailsBelow: 'Entrez vos détails ci-dessous',
-    LogintoEnatega: 'Connectez-vous à Enatega',
+    LogintoNextHop: 'Connectez-vous à NextHop',
     RememberMe: 'Souviens-toi de moi',
     ForgotYourPassword: 'Mot de passe oublié ?',
     errorWhileSaving:
@@ -102,7 +102,7 @@ const fr = {
     ChooseSymbol: 'Choisissez le symbole',
     PHMail: 'par exemple quelquechose@email.com',
     EmailName: "Nom de l'email",
-    PHEnatega: 'par exemple Enatega',
+    PHNextHop: 'par exemple NextHop',
     PHFood: 'par exemple NOURRITURE',
     ClientSecretKey: 'Clé secrète du client',
     Stripe: 'Stripe',
@@ -121,9 +121,9 @@ const fr = {
     LoadingDots: 'Chargement...',
     ErrorDots: 'Erreur...',
     NewAddon: 'Nouveau module complémentaire',
-    EnategaMultivendor: 'Enatega Multivendor',
+    NextHopMultivendor: 'NextHop Multivendor',
     ResetPassword: 'Réinitialiser le mot de passe',
-    EnategaDashboard: 'Tableau de bord Enatega',
+    NextHopDashboard: 'Tableau de bord NextHop',
     UpdateOption: "Mettre à jour l'option",
     AddOption: 'Ajouter une option',
     OrderStatusUpdated: 'Statut de la commande mis à jour',
@@ -312,17 +312,17 @@ const fr = {
     REJECTED: 'REJETÉ',
     UploadaLogo: 'Télécharger un logo',
 
-    "Status updated to {{status}}": "Statut mis à jour à {{status}}",
+    'Status updated to {{status}}': 'Statut mis à jour à {{status}}',
     StatusUpdated: 'Statut mis à jour !',
-    "Failed to update status!": "Échec de la mise à jour du statut !",
-    UpdateSuccessful: "Mise à jour réussie !",
+    'Failed to update status!': 'Échec de la mise à jour du statut !',
+    UpdateSuccessful: 'Mise à jour réussie !',
     UpdateError: 'Erreur de mise à jour',
-    "The value Should not be in the negative": "La valeur ne doit pas être négative",
+    'The value Should not be in the negative':
+      'La valeur ne doit pas être négative',
 
-    "CostType": "Type de coût",
-    "PerKM": "Par KM",
-    "FixedCost": "Coût fixe"
-
+    CostType: 'Type de coût',
+    PerKM: 'Par KM',
+    FixedCost: 'Coût fixe'
   }
 }
 

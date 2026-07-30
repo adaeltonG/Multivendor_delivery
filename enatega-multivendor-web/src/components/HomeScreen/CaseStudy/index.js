@@ -102,7 +102,7 @@ export default function CaseStudy() {
             disableElevation
             onClick={() =>
               window.open(
-                "https://ninjascode.com/Portfolio/Easyeats/",
+                "https://zetahub.co.uk/",
                 "_blank"
               )
             }

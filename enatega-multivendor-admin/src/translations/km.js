@@ -75,7 +75,7 @@ const km = {
     'Delivery Rate': 'អត្រាបញ្ជូន',
     'Currency Symbol': 'និមិត្តសញ្ញារូបិយប័ណ្ណ',
     enterYourDetailsBelow: 'បញ្ចូលពត៌មានរបស់អ្នកខាងក្រោម',
-    LogintoEnatega: 'ចូលទៅកាន់ Enatega',
+    LogintoNextHop: 'ចូលទៅកាន់ NextHop',
     RememberMe: 'ចងចាំខ្ញុំ',
     ForgotYourPassword: 'ភ្លេចពាក្យសម្ងាត់របស់អ្នក?',
     errorWhileSaving: 'កំហុសបានកើតឡើងនៅពេលកំពុងរក្សាទុក, ព្យាយាមម្តងទៀត',
@@ -96,7 +96,7 @@ const km = {
     ChooseSymbol: 'ជ្រើសរើសនិមិត្តសញ្ញារូបិយប័ណ្ណ',
     PHMail: 'ឧ. ស្មតស្រលាញ់@ឧ. គេហទំព័រ. លំអិត',
     EmailName: 'ឈ្មោះអ៊ីមែល',
-    PHEnatega: 'ឧ. ស្មតហោះ',
+    PHNextHop: 'ឧ. ស្មតហោះ',
     PHFood: 'ឧ. ស្មតម្ហូប',
     ClientSecretKey: 'សំងាត់អក្សរសុវត្ថិភាពអតិថិជន',
     Stripe: 'ស្ទ្រីព៍',
@@ -115,9 +115,9 @@ const km = {
     LoadingDots: 'កំពុងផ្ទុក ...',
     ErrorDots: 'កំហុស ...',
     NewAddon: 'គ្រប់គ្រងធាតុបន្ថែមថ្មី',
-    EnategaMultivendor: 'Enatega ម៉ាល់ទ័រពុទ្ធកម្ម',
+    NextHopMultivendor: 'NextHop ម៉ាល់ទ័រពុទ្ធកម្ម',
     ResetPassword: 'កំណត់រង្វាន់ឡើងវិញ',
-    EnategaDashboard: 'ផ្ទៃតាប្រើប្រាស់ Enatega',
+    NextHopDashboard: 'ផ្ទៃតាប្រើប្រាស់ NextHop',
     UpdateOption: 'ធ្វើបច្ចុប្បន្នភាពជម្រើស',
     AddOption: 'បន្ថែមជម្រើស',
     OrderStatusUpdated: 'កំណត់ស្ថានភាពកម្មង់ទាន់សម័យ',
@@ -303,16 +303,16 @@ const km = {
     DELIVERED: 'ត្រូវបានដឹកជញ្ជូន',
     REJECTED: 'ត្រូវបានបដិសេធចោល',
     UploadaLogo: 'ផ្ទុកឡូកូឡូត',
-    "Status updated to {{status}}": "ស្ថានភាពត្រូវបានធ្វើបច្ចុប្បន្នភាពទៅ{{status}}",
-    StatusUpdated: "!ស្ថានភាពត្រូវបានធ្វើបច្ចុប្បន្នភាព",
-    "Failed to update status!": "!បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាពស្ថានភាព",
-    UpdateSuccessful: "!ការធ្វើបច្ចុប្បន្នភាពជោគជ័យ",
-    UpdateError: "កំហុសនៃការធ្វើបច្ចុប្បន្នភាព",
-    "The value Should not be in the negative": "តម្លៃមិនគួរត្រូវជាលេខអវិជ្ជមាន",
-    "CostType": "ប្រភេទថ្លៃ",
-    "PerKM": "ក្នុងមួយគីឡូម៉ែត្រ",
-    "FixedCost": "ថ្លៃថេរ"
-
+    'Status updated to {{status}}':
+      'ស្ថានភាពត្រូវបានធ្វើបច្ចុប្បន្នភាពទៅ{{status}}',
+    StatusUpdated: '!ស្ថានភាពត្រូវបានធ្វើបច្ចុប្បន្នភាព',
+    'Failed to update status!': '!បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាពស្ថានភាព',
+    UpdateSuccessful: '!ការធ្វើបច្ចុប្បន្នភាពជោគជ័យ',
+    UpdateError: 'កំហុសនៃការធ្វើបច្ចុប្បន្នភាព',
+    'The value Should not be in the negative': 'តម្លៃមិនគួរត្រូវជាលេខអវិជ្ជមាន',
+    CostType: 'ប្រភេទថ្លៃ',
+    PerKM: 'ក្នុងមួយគីឡូម៉ែត្រ',
+    FixedCost: 'ថ្លៃថេរ'
   }
 }
 

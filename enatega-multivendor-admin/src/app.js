@@ -103,7 +103,7 @@ const App = () => {
             // Customize notification here
             // const { title, body } = payload.notification
             // eslint-disable-next-line no-restricted-globals
-            var notificationTitle = 'New Order on Enatega Multivendor'
+            var notificationTitle = 'New Order on NextHop Multivendor'
             var notificationOptions = {
               body: payload.data.orderid,
               icon: `${window.location.origin}${process.env.PUBLIC_URL}/favicon.png`

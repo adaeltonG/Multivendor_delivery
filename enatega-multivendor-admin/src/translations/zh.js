@@ -75,7 +75,7 @@ const zh = {
     'Delivery Rate': '送货费率',
     'Currency Symbol': '货币符号',
     enterYourDetailsBelow: '在下面输入您的详细信息',
-    LogintoEnatega: '登录到Enatega',
+    LogintoNextHop: '登录到NextHop',
     RememberMe: '记住我',
     ForgotYourPassword: '忘记密码？',
     errorWhileSaving: '保存时出现错误，请重试',
@@ -96,7 +96,7 @@ const zh = {
     ChooseSymbol: '选择符号',
     PHMail: '例如something@email.com',
     EmailName: '电子邮件名称',
-    PHEnatega: '例如Enatega',
+    PHNextHop: '例如NextHop',
     PHFood: '例如FOOD',
     ClientSecretKey: '客户端秘钥',
     Stripe: '条纹',
@@ -115,9 +115,9 @@ const zh = {
     LoadingDots: '加载中...',
     ErrorDots: '错误...',
     NewAddon: '新插件',
-    EnategaMultivendor: 'Enatega 多供应商',
+    NextHopMultivendor: 'NextHop 多供应商',
     ResetPassword: '重置密码',
-    EnategaDashboard: 'Enatega 仪表板',
+    NextHopDashboard: 'NextHop 仪表板',
     UpdateOption: '更新选项',
     AddOption: '添加选项',
     OrderStatusUpdated: '订单状态已更新',
@@ -301,17 +301,16 @@ const zh = {
     REJECTED: '已拒绝',
     UploadaLogo: '上传徽标',
 
-    "Status updated to {{status}}": "状态更新为 {{status}}",
+    'Status updated to {{status}}': '状态更新为 {{status}}',
     StatusUpdated: '状态已更新！',
-    "Failed to update status!": "更新状态失败！",
-    UpdateSuccessful: "更新成功！",
+    'Failed to update status!': '更新状态失败！',
+    UpdateSuccessful: '更新成功！',
     UpdateError: '更新错误',
-    "The value Should not be in the negative": "值不应为负数",
+    'The value Should not be in the negative': '值不应为负数',
 
-    "CostType": "费用类型",
-    "PerKM": "每公里",
-    "FixedCost": "固定费用"
-
+    CostType: '费用类型',
+    PerKM: '每公里',
+    FixedCost: '固定费用'
   }
 }
 export default zh

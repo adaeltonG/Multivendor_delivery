@@ -176,7 +176,7 @@ const Login = props => {
             <Box className={classes.flexRow}>
               <Box item className={classes.heading}>
                 <Typography variant="h6" className={classes.text}>
-                  {t('LogintoEnatega')}
+                  {t('LogintoNextHop')}
                 </Typography>
               </Box>
             </Box>

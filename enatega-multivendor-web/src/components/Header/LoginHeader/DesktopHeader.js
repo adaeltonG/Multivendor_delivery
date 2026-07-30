@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import useStyle from "./styles";
-import { ReactComponent as Logo } from "../../../assets/images/logo.svg";
+import logo from "../../../assets/images/logo.png";
 import { useTheme } from "@emotion/react";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import PersonIcon from "@mui/icons-material/Person";
@@ -24,7 +24,7 @@ function LoginDesktopHeader({ title, showIcon, showCart = false }) {
           to={location.pathname === "/checkout" ? "/restaurant-list" : "/"}
           className={classes.linkDecoration}
         >
-          <Logo height={50} width={50} />
+          <img src={logo} alt="NextHop" height={50} width={50} />
 
           <Typography
             variant="h6"

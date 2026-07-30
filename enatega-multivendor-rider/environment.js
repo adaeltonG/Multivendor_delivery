@@ -20,7 +20,6 @@ const getEnvVars = (env = Updates.releaseChannel) => {
     GOOGLE_MAPS_KEY: configuration.googleApiKey
     // SENTRY_DSN:
     //   'https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/6135261', // [Add your own Sentry DSN link][example: https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/5135261]
-    // GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA'
   }
 }
 

@@ -36,14 +36,14 @@ export default function Promotion() {
       </Hidden>
       <MaterialLink
         target="__blank"
-        href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
+        href="https://zetahub.co.uk/"
       >
         <AppStoreIcon />
       </MaterialLink>
       <Box pl={theme.spacing(2)} />
       <MaterialLink
         target="__blank"
-        href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"
+        href="https://zetahub.co.uk/"
       >
         <PlayStoreIcon />
       </MaterialLink>

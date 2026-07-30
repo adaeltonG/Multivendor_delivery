@@ -5,7 +5,7 @@ dist/
 build/
 .env
 .env.*
-!.env.example
+*.jks
 !.env.template
 /package-lock.json
 /whatsapp-cloud-api/

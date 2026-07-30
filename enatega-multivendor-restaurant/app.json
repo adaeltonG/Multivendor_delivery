@@ -1,21 +1,23 @@
 {
   "expo": {
-    "name": "Enatega Multivendor Restaurant",
-    "slug": "enatega-multivendor-restaurant",
+    "name": "NextHop Restaurant",
+    "slug": "nexthop-restaurant",
+    "owner": "adaelton",
+    "description": "NextHop Restaurant helps restaurant teams manage menus, incoming orders and fulfilment.",
     "version": "1.0.33",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#6FCF97"
+      "resizeMode": "contain",
+      "backgroundColor": "#EAF6EF"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "multivendor.enatega.restaurant",
+      "bundleIdentifier": "uk.co.zetahub.nexthop.restaurant",
       "infoPlist": {
         "UIBackgroundModes": [
           "remote-notification"
@@ -24,8 +26,7 @@
     },
     "android": {
       "versionCode": 42,
-      "package": "multivendor.enatega.restaurant",
-      "googleServicesFile": "./google-services.json",
+      "package": "uk.co.zetahub.nexthop.restaurant",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
@@ -34,12 +35,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "6a94161f-f21b-4ad9-8a04-c95b54ef0116"
-      }
-    },
-    "owner": "ninjas_code",
     "plugins": [
       "expo-localization",
       "expo-secure-store",
