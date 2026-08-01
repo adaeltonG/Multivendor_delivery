@@ -71,7 +71,7 @@ for (const frontend of frontendRoots) {
     try {
       ast = parseJavaScript(source, {
         sourceType: 'unambiguous',
-        plugins: ['jsx', 'typescript', 'classProperties', 'optionalChaining']
+        plugins: ['jsx', 'typescript']
       })
     } catch (error) {
       malformed.push(`${relative(repository, file)}: JavaScript parse failed: ${String(error)}`)

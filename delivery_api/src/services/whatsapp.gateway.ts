@@ -34,19 +34,23 @@ function previewForPayload(payload: WhatsAppPayload): string {
   return `[${payload.type}]`
 }
 
-function messageType(type: string): string {
+const WHATSAPP_MESSAGE_TYPES = [
+  'TEXT',
+  'IMAGE',
+  'DOCUMENT',
+  'AUDIO',
+  'VIDEO',
+  'LOCATION',
+  'INTERACTIVE',
+  'TEMPLATE'
+] as const
+
+type WhatsAppMessageType = (typeof WHATSAPP_MESSAGE_TYPES)[number] | 'UNKNOWN'
+
+function messageType(type: string): WhatsAppMessageType {
   const normalized = type.toUpperCase()
-  return [
-    'TEXT',
-    'IMAGE',
-    'DOCUMENT',
-    'AUDIO',
-    'VIDEO',
-    'LOCATION',
-    'INTERACTIVE',
-    'TEMPLATE'
-  ].includes(normalized)
-    ? normalized
+  return (WHATSAPP_MESSAGE_TYPES as readonly string[]).includes(normalized)
+    ? (normalized as (typeof WHATSAPP_MESSAGE_TYPES)[number])
     : 'UNKNOWN'
 }
 

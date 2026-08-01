@@ -5,6 +5,8 @@ import {
   WhatsAppConversation,
   WhatsAppMessage
 } from '../../models/index.js'
+import type { QueryFilter } from 'mongoose'
+import type { WhatsAppConversationDocument } from '../../models/index.js'
 import type { GraphQLContext } from '../context.js'
 import { badUserInput, forbidden, notFound, unauthenticated } from '../../utils/errors.js'
 import { encryptSecret } from '../../utils/secret.js'
@@ -128,7 +130,7 @@ export const whatsappResolvers = {
         purpose: 'ORDERING',
         ...(restaurant ? { restaurant } : {}),
         ...(args.status ? { status: args.status } : {})
-      })
+      } as QueryFilter<WhatsAppConversationDocument>)
         .sort({ lastMessageAt: -1 })
         .skip(Math.max(0, args.offset ?? 0))
         .limit(limit)

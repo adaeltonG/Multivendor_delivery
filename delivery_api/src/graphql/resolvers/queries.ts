@@ -1,4 +1,4 @@
-import { trusted, Types } from 'mongoose'
+import { trusted, Types, type QueryFilter } from 'mongoose'
 import { City } from 'country-state-city'
 import {
   Banner,
@@ -19,6 +19,7 @@ import {
   WithdrawRequest,
   Zone
 } from '../../models/index.js'
+import type { OrderDocument } from '../../models/index.js'
 import type { GraphQLContext } from '../context.js'
 import { forbidden, notFound, unauthenticated } from '../../utils/errors.js'
 import { assertCanReadOrder } from '../../services/order.service.js'
@@ -169,7 +170,7 @@ export const queryResolvers = {
       Order.find({
         ...(restaurantId ? { restaurant: restaurantId } : {}),
         orderStatus: ACTIVE_STATUSES
-      }).sort({ createdAt: -1 }),
+      } as QueryFilter<OrderDocument>).sort({ createdAt: -1 }),
     async getActiveOrdersWithPagination(
       _parent: unknown,
       args: { page?: number; rowsPerPage?: number; search?: string; restaurantId?: string }
@@ -250,7 +251,11 @@ export const queryResolvers = {
       const category = restaurant.categories.find(value =>
         value.foods.some(food => food._id.equals(itemId))
       )
-      return category?.foods.filter(food => !food._id.equals(itemId)).map(food => food.id) ?? []
+      return (
+        category?.foods
+          .filter(food => !food._id.equals(itemId))
+          .map(food => food._id.toString()) ?? []
+      )
     },
     async popularItems(_parent: unknown, { restaurantId }: { restaurantId: string }) {
       return Order.aggregate([
