@@ -621,7 +621,7 @@ function Workspace({
 
   const send = async () => {
     const text = draft.trim()
-    if (!text || busy || conversation.status !== 'MANUAL') return
+    if (!text || busy || conversation.status === 'BOT') return
     setSendError('')
     try {
       await onSend(text)
@@ -673,6 +673,11 @@ function Workspace({
                 Return to bot
               </button>
             )}
+            {conversation.status === 'CLOSED' && (
+              <button className="action-button" onClick={onRelease} disabled={busy}>
+                Reopen with bot
+              </button>
+            )}
             <button className="icon-button context-toggle" onClick={() => onContext(true)} aria-label="View order context">
               <Icon name="info" />
             </button>
@@ -694,7 +699,7 @@ function Workspace({
                 ? 'Take over when a customer needs a person.'
                 : conversation.status === 'MANUAL'
                   ? 'Your replies are sent directly through WhatsApp.'
-                  : 'Reopen from the queue if follow-up is needed.'}
+                  : 'A reply reopens it for the team. A new customer message restarts the bot.'}
             </span>
           </p>
         </div>
@@ -718,16 +723,16 @@ function Workspace({
                   ? 'Reply to customer…'
                   : conversation.status === 'BOT'
                     ? 'Take over to reply manually'
-                    : 'Conversation is closed'
+                    : 'Reply to reopen this conversation…'
               }
-              disabled={conversation.status !== 'MANUAL' || busy}
+              disabled={conversation.status === 'BOT' || busy}
               rows={2}
               aria-label="WhatsApp reply"
             />
             <button
               className="send-button"
               type="submit"
-              disabled={!draft.trim() || conversation.status !== 'MANUAL' || busy}
+              disabled={!draft.trim() || conversation.status === 'BOT' || busy}
               aria-label="Send WhatsApp message"
             >
               <Icon name="send" size={19} />
@@ -736,7 +741,9 @@ function Workspace({
           <p className="composer-hint">
             {conversation.status === 'MANUAL'
               ? 'Enter to send · Shift + Enter for a new line'
-              : 'Automated replies continue until a team member takes over.'}
+              : conversation.status === 'CLOSED'
+                ? 'Sending reopens this conversation in manual mode.'
+                : 'Automated replies continue until a team member takes over.'}
           </p>
         </form>
       </section>
@@ -1182,7 +1189,7 @@ export default function App() {
           }),
           fields: {
             status: (current: ConversationStatus | undefined) =>
-              current === 'CLOSED' ? 'MANUAL' : current,
+              current === 'CLOSED' ? 'BOT' : current,
             unreadCount: (current: number | undefined) =>
               message.conversation === selectedId ? 0 : current
           }

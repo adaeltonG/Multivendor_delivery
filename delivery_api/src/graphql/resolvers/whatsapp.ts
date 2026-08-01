@@ -269,9 +269,6 @@ export const whatsappResolvers = {
         badUserInput('Message must contain between 1 and 4096 characters')
       }
       const conversation = await authorizedConversation(conversationId, context)
-      if (conversation.status === 'CLOSED') {
-        badUserInput('Reopen the conversation before sending a message')
-      }
       if (conversation.status !== 'MANUAL') {
         conversation.status = 'MANUAL'
         conversation.unreadCount = 0

@@ -7,6 +7,7 @@ import {
 } from '../models/index.js'
 import { pubsub, topics } from '../graphql/pubsub.js'
 import { decryptSecret } from '../utils/secret.js'
+import { reopenClosedConversationForBot } from './whatsapp.conversation.js'
 
 export type WhatsAppPayload = Record<string, unknown> & {
   type: string
@@ -128,7 +129,9 @@ export async function persistInboundWhatsAppMessage(args: {
     args.customerName
   )
   const existing = await WhatsAppMessage.findOne({ metaMessageId: args.metaMessageId })
-  if (existing) return { conversation, message: existing, duplicate: true }
+  if (existing) {
+    return { conversation, message: existing, duplicate: true, reopened: false }
+  }
 
   const now = new Date()
   const message = await WhatsAppMessage.create({
@@ -142,15 +145,7 @@ export async function persistInboundWhatsAppMessage(args: {
     payload: args.payload,
     status: 'RECEIVED'
   })
-  if (conversation.status === 'CLOSED') {
-    conversation.status = 'BOT'
-    conversation.botState = conversation.restaurant ? 'BROWSING_MENU' : 'SELECTING_RESTAURANT'
-    conversation.cart.splice(0, conversation.cart.length)
-    conversation.deliveryAddress = ''
-    conversation.deliveryLocation = undefined
-    conversation.paymentMethod = ''
-    conversation.order = null
-  }
+  const reopened = reopenClosedConversationForBot(conversation)
   conversation.lastMessagePreview = (args.text || `[${args.type}]`).slice(0, 240)
   conversation.lastMessageAt = now
   conversation.lastInboundAt = now
@@ -160,7 +155,7 @@ export async function persistInboundWhatsAppMessage(args: {
     publishWhatsAppMessage(message),
     publishWhatsAppConversation(conversation)
   ])
-  return { conversation, message, duplicate: false }
+  return { conversation, message, duplicate: false, reopened }
 }
 
 export async function sendWhatsAppPayload(

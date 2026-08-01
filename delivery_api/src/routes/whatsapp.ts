@@ -176,7 +176,8 @@ export async function persistWhatsAppWebhook(body: Record<string, any>) {
             restaurantId: persisted.conversation.restaurant?.toString(),
             senderSuffix: message.from.slice(-4),
             messageType: message.type,
-            duplicate: persisted.duplicate
+            duplicate: persisted.duplicate,
+            reopened: persisted.reopened ?? false
           },
           'WhatsApp inbound message received'
         )
