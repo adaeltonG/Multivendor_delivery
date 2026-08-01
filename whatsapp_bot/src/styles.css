@@ -392,6 +392,10 @@ h1, h2, h3, p { margin-top: 0; }
   cursor: pointer;
   transition: background 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
+.conversation-ticket:focus-visible {
+  outline: 2px solid rgba(88, 178, 126, .45);
+  outline-offset: 2px;
+}
 .conversation-ticket:hover { background: #f4f8f6; transform: translateY(-1px); }
 .conversation-ticket.active {
   background: #eaf6ef;
@@ -410,6 +414,37 @@ h1, h2, h3, p { margin-top: 0; }
 }
 .conversation-ticket:not(.active):has(.unread-count) .ticket-rail { opacity: 1; }
 .ticket-copy { display: flex; flex-direction: column; min-width: 0; }
+.ticket-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #6d7c74;
+  background: rgba(255, 255, 255, .92);
+  border: 1px solid rgba(26, 67, 53, .08);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(26, 67, 53, .08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease, transform 150ms ease, color 150ms ease, background 150ms ease;
+}
+.ticket-close:hover {
+  color: #8c3f31;
+  background: #fff7f4;
+}
+.conversation-ticket:hover .ticket-close,
+.conversation-ticket:focus-visible .ticket-close,
+.conversation-ticket:focus-within .ticket-close {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
 .ticket-line { display: flex; justify-content: space-between; gap: 8px; }
 .ticket-line strong {
   overflow: hidden;

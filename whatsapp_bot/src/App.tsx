@@ -260,17 +260,27 @@ function QueueError({ error, retry }: { error: ApolloError; retry: () => void })
 function ConversationTicket({
   conversation,
   active,
-  onSelect
+  onSelect,
+  onClose
 }: {
   conversation: Conversation
   active: boolean
   onSelect: () => void
+  onClose: () => void
 }) {
   const name = conversation.customerName || 'WhatsApp customer'
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       className={`conversation-ticket ${active ? 'active' : ''}`}
       onClick={onSelect}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onSelect()
+        }
+      }}
       aria-current={active ? 'true' : undefined}
       data-conversation-id={conversation._id}
     >
@@ -293,12 +303,25 @@ function ConversationTicket({
           )}
         </span>
       </span>
+      {conversation.status !== 'CLOSED' && (
+        <button
+          type="button"
+          className="ticket-close"
+          aria-label={`Close conversation with ${name}`}
+          onClick={(event) => {
+            event.stopPropagation()
+            onClose()
+          }}
+        >
+          <Icon name="close" size={14} />
+        </button>
+      )}
       {conversation.unreadCount > 0 && (
         <span className="unread-count" aria-label={`${conversation.unreadCount} unread`}>
           {conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}
         </span>
       )}
-    </button>
+    </div>
   )
 }
 
@@ -312,6 +335,7 @@ function QueuePanel({
   onFilter,
   onSearch,
   onSelect,
+  onClose,
   onRetry
 }: {
   conversations: Conversation[]
@@ -323,6 +347,7 @@ function QueuePanel({
   onFilter: (filter: QueueFilter) => void
   onSearch: (search: string) => void
   onSelect: (id: string) => void
+  onClose: (id: string) => void
   onRetry: () => void
 }) {
   return (
@@ -379,6 +404,7 @@ function QueuePanel({
               conversation={conversation}
               active={conversation._id === selectedId}
               onSelect={() => onSelect(conversation._id)}
+              onClose={() => onClose(conversation._id)}
             />
           ))
         )}
@@ -575,7 +601,6 @@ function Workspace({
   onRetryMessages,
   onTakeOver,
   onRelease,
-  onClose,
   onSend
 }: {
   conversation: Conversation
@@ -589,7 +614,6 @@ function Workspace({
   onRetryMessages: () => void
   onTakeOver: () => void
   onRelease: () => void
-  onClose: () => void
   onSend: (text: string) => Promise<void>
 }) {
   const [draft, setDraft] = useState('')
@@ -647,11 +671,6 @@ function Workspace({
             {conversation.status === 'MANUAL' && (
               <button className="action-button" onClick={onRelease} disabled={busy}>
                 Return to bot
-              </button>
-            )}
-            {conversation.status !== 'CLOSED' && (
-              <button className="text-button quiet" onClick={onClose} disabled={busy}>
-                Close
               </button>
             )}
             <button className="icon-button context-toggle" onClick={() => onContext(true)} aria-label="View order context">
@@ -1154,6 +1173,21 @@ export default function App() {
           }
         }
       )
+      void conversationsQuery.refetch()
+      if (message.direction === 'INBOUND' && message.conversation) {
+        client.cache.modify({
+          id: client.cache.identify({
+            __typename: 'WhatsAppConversation',
+            _id: message.conversation
+          }),
+          fields: {
+            status: (current: ConversationStatus | undefined) =>
+              current === 'CLOSED' ? 'MANUAL' : current,
+            unreadCount: (current: number | undefined) =>
+              message.conversation === selectedId ? 0 : current
+          }
+        })
+      }
     },
     onError: () => setSubscriptionOnline(false)
   })
@@ -1320,6 +1354,7 @@ export default function App() {
           onFilter={setFilter}
           onSearch={setSearch}
           onSelect={openConversation}
+          onClose={(id) => void closeConversation({ variables: { conversationId: id } })}
           onRetry={() => void conversationsQuery.refetch()}
         />
 
@@ -1336,7 +1371,6 @@ export default function App() {
             onRetryMessages={() => void messagesQuery.refetch()}
             onTakeOver={() => void takeOver({ variables: { conversationId: selected._id } })}
             onRelease={() => void release({ variables: { conversationId: selected._id } })}
-            onClose={() => void closeConversation({ variables: { conversationId: selected._id } })}
             onSend={async (text) => {
               const result = await sendMessage({
                 variables: { conversationId: selected._id, text }
