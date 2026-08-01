@@ -139,7 +139,13 @@ export async function persistInboundWhatsAppMessage(args: {
     status: 'RECEIVED'
   })
   if (conversation.status === 'CLOSED') {
-    conversation.status = 'MANUAL'
+    conversation.status = 'BOT'
+    conversation.botState = conversation.restaurant ? 'BROWSING_MENU' : 'SELECTING_RESTAURANT'
+    conversation.cart.splice(0, conversation.cart.length)
+    conversation.deliveryAddress = ''
+    conversation.deliveryLocation = undefined
+    conversation.paymentMethod = ''
+    conversation.order = null
   }
   conversation.lastMessagePreview = (args.text || `[${args.type}]`).slice(0, 240)
   conversation.lastMessageAt = now
