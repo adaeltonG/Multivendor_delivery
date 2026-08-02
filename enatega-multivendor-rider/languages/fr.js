@@ -117,6 +117,19 @@ export const fr = {
   orders: 'Commandes',
   signInText: 'Connectez-vous avec votre e-mail',
   signInBtn: 'Se connecter',
+  or: 'ou',
+  continueWithGoogle: 'Continuer avec Google',
+  googleRiderAccountHint:
+    'Utilisez l’adresse Google associée à votre compte livreur.',
+  googleSignInNotConfigured: 'La connexion Google n’est pas configurée.',
+  googleSignInOpenError: 'Impossible d’ouvrir la connexion Google.',
+  googleSignInIncomplete: 'La connexion Google n’a pas été terminée.',
+  googleIdentityTokenMissing: 'Google n’a pas renvoyé d’identité valide.',
+  googleRiderNotRegistered:
+    'Aucun compte livreur actif n’est associé à cette adresse Google.',
+  googleRiderAlreadyLinked:
+    'Ce compte livreur est lié à un autre compte Google.',
+  googleSignInVerificationError: 'La connexion Google n’a pas pu être vérifiée.',
   status: 'Statut',
   available: 'Disponible',
   notAvailable: 'Non disponible',

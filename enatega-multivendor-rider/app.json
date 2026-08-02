@@ -5,6 +5,7 @@
     "version": "1.1.24",
     "slug": "nexthop-rider",
     "owner": "adaelton",
+    "scheme": "nexthop-rider",
     "plugins": [
       [
         "expo-updates",
@@ -44,7 +45,8 @@
           "location",
           "fetch",
           "remote-notification"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -57,6 +59,11 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "309f3be5-bf52-4d5f-9b5a-80fc95d3477c"
+      }
     }
   }
 }

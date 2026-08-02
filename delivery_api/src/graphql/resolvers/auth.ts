@@ -153,21 +153,64 @@ export const authResolvers = {
 
     async riderLogin(
       _parent: unknown,
-      args: { username?: string; password?: string; notificationToken?: string }
+      args: {
+        username?: string
+        password?: string
+        googleIdToken?: string
+        notificationToken?: string
+      }
     ) {
-      if (!args.username || !args.password) badUserInput('Username and password are required')
-      const identity = args.username.trim().toLowerCase()
-      const rider = await Rider.findOne({
-        $or: [{ username: identity }, { email: identity }],
-        isActive: true
-      }).select('+password')
-      if (!rider || !(await comparePassword(args.password, String(rider.password)))) {
-        unauthenticated('Invalid username or password')
+      let rider
+
+      if (args.googleIdToken) {
+        let googleIdentity
+        try {
+          googleIdentity = await verifyGoogleIdToken(args.googleIdToken)
+        } catch {
+          unauthenticated('Google sign-in could not be verified')
+        }
+
+        rider = await Rider.findOne({
+          googleId: googleIdentity.subject,
+          isActive: true
+        }).select('+googleId')
+
+        if (!rider) {
+          rider = await Rider.findOne({
+            $or: [
+              { email: googleIdentity.email },
+              { username: googleIdentity.email }
+            ],
+            isActive: true
+          }).select('+googleId')
+        }
+
+        if (!rider) {
+          unauthenticated(
+            'No active rider account is registered for this Google email'
+          )
+        }
+        if (rider.googleId && rider.googleId !== googleIdentity.subject) {
+          unauthenticated('This rider account is linked to another Google account')
+        }
+        if (!rider.googleId) rider.googleId = googleIdentity.subject
+      } else {
+        if (!args.username || !args.password) {
+          badUserInput('Username and password are required')
+        }
+        const identity = args.username.trim().toLowerCase()
+        rider = await Rider.findOne({
+          $or: [{ username: identity }, { email: identity }],
+          isActive: true
+        }).select('+password')
+        if (!rider || !(await comparePassword(args.password, String(rider.password)))) {
+          unauthenticated('Invalid username or password')
+        }
       }
       if (args.notificationToken) {
         rider.notificationToken = args.notificationToken
-        await rider.save()
       }
+      await rider.save()
       return authResponse(rider, 'RIDER', { riderId: rider.id })
     },
 

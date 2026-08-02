@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react'
-import { Dimensions } from 'react-native'
+import { useContext, useEffect, useState } from 'react'
+import { Platform } from 'react-native'
 import { riderLogin } from '../../apollo/mutations'
 import { defaultRiderCreds } from '../../apollo/queries'
 import { AuthContext } from '../../context/auth'
@@ -10,6 +10,10 @@ import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
 import { useTranslation } from 'react-i18next'
 import Constants from 'expo-constants'
+import * as Google from 'expo-auth-session/providers/google'
+import * as WebBrowser from 'expo-web-browser'
+
+WebBrowser.maybeCompleteAuthSession()
 
 const RIDER_LOGIN = gql`
   ${riderLogin}
@@ -25,7 +29,7 @@ const useLogin = () => {
   const [showPassword, setShowPassword] = useState(true)
   const [usernameError, setUsernameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
-  const { height } = Dimensions.get('window')
+  const [googleLoading, setGoogleLoading] = useState(false)
 
   const { setTokenAsync } = useContext(AuthContext)
 
@@ -35,6 +39,21 @@ const useLogin = () => {
   })
 
   useQuery(RIDER_CREDS, { onCompleted, onError })
+
+  const androidClientId = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID
+  const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
+  const googleAuthConfigured = Platform.select({
+    android: Boolean(androidClientId),
+    ios: Boolean(iosClientId),
+    default: false
+  })
+  const disabledClientId = 'google-auth-not-configured.apps.googleusercontent.com'
+  const [googleRequest, googleResponse, promptGoogleAsync] =
+    Google.useAuthRequest({
+      androidClientId: androidClientId || disabledClientId,
+      iosClientId: iosClientId || disabledClientId,
+      scopes: ['openid', 'profile', 'email']
+    })
 
   function validateForm() {
     let result = true
@@ -71,57 +90,105 @@ const useLogin = () => {
     }
   }
   function onError(error) {
-    const message = error?.message || t('checkInternet')
+    let message = error?.message || t('checkInternet')
+    if (message.includes('No active rider account')) {
+      message = t('googleRiderNotRegistered')
+    } else if (message.includes('linked to another Google account')) {
+      message = t('googleRiderAlreadyLinked')
+    } else if (message.includes('Google sign-in could not be verified')) {
+      message = t('googleSignInVerificationError')
+    }
     FlashMessage({ message })
+    setGoogleLoading(false)
   }
 
-  async function onSubmit() {
-    if (validateForm()) {
-      // Get notification permissions
-      const settings = await Notifications.getPermissionsAsync()
-      let notificationPermissions = { ...settings }
+  async function getNotificationToken() {
+    const settings = await Notifications.getPermissionsAsync()
+    let notificationPermissions = { ...settings }
 
-      // Request notification permissions if not granted or not provisional on iOS
-      if (
-        settings?.status !== 'granted' ||
-        settings.ios?.status !==
-          Notifications.IosAuthorizationStatus.PROVISIONAL
-      ) {
-        notificationPermissions = await Notifications.requestPermissionsAsync({
-          ios: {
-            allowProvisional: true,
-            allowAlert: true,
-            allowBadge: true,
-            allowSound: true,
-            allowAnnouncements: true
-          }
-        })
-      }
-
-      let notificationToken = null
-      // Get notification token if permissions are granted and it's a device
-      if (
-        (notificationPermissions?.status === 'granted' ||
-          notificationPermissions.ios?.status ===
-            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
-        Device.isDevice
-      ) {
-        try {
-          const projectId =
-            Constants.expoConfig?.extra?.eas?.projectId ||
-            Constants.easConfig?.projectId
-          if (projectId) {
-            notificationToken = (
-              await Notifications.getExpoPushTokenAsync({ projectId })
-            ).data
-          }
-        } catch (error) {
-          console.warn(
-            'Push notifications are unavailable; continuing login without a token.',
-            error?.message || error
-          )
+    if (settings?.status !== 'granted') {
+      notificationPermissions = await Notifications.requestPermissionsAsync({
+        ios: {
+          allowProvisional: true,
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true
         }
+      })
+    }
+
+    if (
+      notificationPermissions?.status !== 'granted' &&
+      notificationPermissions.ios?.status !==
+        Notifications.IosAuthorizationStatus.PROVISIONAL
+    ) {
+      return null
+    }
+    if (!Device.isDevice) return null
+
+    try {
+      const projectId =
+        Constants.expoConfig?.extra?.eas?.projectId ||
+        Constants.easConfig?.projectId
+      if (!projectId) return null
+      return (await Notifications.getExpoPushTokenAsync({ projectId })).data
+    } catch (error) {
+      console.warn(
+        'Push notifications are unavailable; continuing login without a token.',
+        error?.message || error
+      )
+      return null
+    }
+  }
+
+  async function onGoogleSubmit() {
+    if (!googleAuthConfigured) {
+      FlashMessage({ message: t('googleSignInNotConfigured') })
+      return
+    }
+    setGoogleLoading(true)
+    try {
+      await promptGoogleAsync()
+    } catch (error) {
+      setGoogleLoading(false)
+      FlashMessage({ message: t('googleSignInOpenError') })
+    }
+  }
+
+  useEffect(() => {
+    async function completeGoogleLogin() {
+      if (!googleResponse) return
+      if (googleResponse.type !== 'success') {
+        setGoogleLoading(false)
+        if (googleResponse.type !== 'dismiss' && googleResponse.type !== 'cancel') {
+          FlashMessage({ message: t('googleSignInIncomplete') })
+        }
+        return
       }
+
+      const googleIdToken =
+        googleResponse.authentication?.idToken ||
+        googleResponse.params?.id_token
+      if (!googleIdToken) {
+        setGoogleLoading(false)
+        FlashMessage({ message: t('googleIdentityTokenMissing') })
+        return
+      }
+
+      mutate({
+        variables: {
+          googleIdToken,
+          notificationToken: await getNotificationToken()
+        }
+      })
+    }
+
+    completeGoogleLogin()
+  }, [googleResponse])
+
+  async function onSubmit() {
+    if (!googleLoading && validateForm()) {
+      const notificationToken = await getNotificationToken()
 
       // Perform mutation with the obtained data
       mutate({
@@ -144,7 +211,10 @@ const useLogin = () => {
     showPassword,
     setShowPassword,
     loading,
-    height
+    googleLoading,
+    googleAuthConfigured,
+    googleRequest,
+    onGoogleSubmit
   }
 }
 

@@ -1115,7 +1115,7 @@ export const typeDefs = `#graphql
   type Mutation {
     login(email: String, password: String, type: String!, appleId: String, googleIdToken: String, name: String, notificationToken: String): AuthData!
     createUser(userInput: UserInput!): AuthData!
-    riderLogin(username: String, password: String, notificationToken: String): AuthData!
+    riderLogin(username: String, password: String, googleIdToken: String, notificationToken: String): AuthData!
     restaurantLogin(username: String!, password: String!): AuthData!
     ownerLogin(email: String!, password: String!): AuthData!
     updateUser(updateUserInput: UpdateUserInput!): User!

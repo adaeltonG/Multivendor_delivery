@@ -118,6 +118,18 @@ export const de = {
   Orders: 'Bestellungen',
   signInText: 'Anmelden mit Ihrer E-Mail',
   signInBtn: 'Anmelden',
+  or: 'oder',
+  continueWithGoogle: 'Mit Google fortfahren',
+  googleRiderAccountHint: 'Verwende die Google-E-Mail deines Fahrerkontos.',
+  googleSignInNotConfigured: 'Google-Anmeldung ist nicht konfiguriert.',
+  googleSignInOpenError: 'Google-Anmeldung konnte nicht geöffnet werden.',
+  googleSignInIncomplete: 'Google-Anmeldung wurde nicht abgeschlossen.',
+  googleIdentityTokenMissing: 'Google hat keine gültige Identität geliefert.',
+  googleRiderNotRegistered:
+    'Für diese Google-E-Mail ist kein aktives Fahrerkonto registriert.',
+  googleRiderAlreadyLinked:
+    'Dieses Fahrerkonto ist mit einem anderen Google-Konto verknüpft.',
+  googleSignInVerificationError: 'Google-Anmeldung konnte nicht bestätigt werden.',
   status: 'Status',
   available: 'Verfügbar',
   notAvailable: 'Nicht verfügbar',

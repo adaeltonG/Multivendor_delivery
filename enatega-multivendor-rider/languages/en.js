@@ -114,6 +114,19 @@ export const en = {
   Orders: 'Orders',
   signInText: 'Sign in with your email',
   signInBtn: 'Sign In',
+  or: 'or',
+  continueWithGoogle: 'Continue with Google',
+  googleRiderAccountHint:
+    'Use the Google email registered with your rider account.',
+  googleSignInNotConfigured: 'Google sign-in is not configured for this app.',
+  googleSignInOpenError: 'Google sign-in could not be opened.',
+  googleSignInIncomplete: 'Google sign-in was not completed.',
+  googleIdentityTokenMissing: 'Google did not return a valid identity token.',
+  googleRiderNotRegistered:
+    'No active rider account is registered for this Google email.',
+  googleRiderAlreadyLinked:
+    'This rider account is linked to another Google account.',
+  googleSignInVerificationError: 'Google sign-in could not be verified.',
   status: 'Status',
   available: 'Available',
   notAvailable: 'Not Available',

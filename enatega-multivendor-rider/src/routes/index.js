@@ -1,6 +1,9 @@
 /* eslint-disable react/display-name */
 import React, { useCallback, useContext, useEffect } from 'react'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets
+} from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -40,12 +43,13 @@ const Tab = createBottomTabNavigator()
 
 function MyTabs() {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         ...tabIcon(route),
-        ...tabOptions()
+        ...tabOptions(insets.bottom)
       })}>
       <Tab.Screen
         name="Home"
@@ -72,7 +76,7 @@ function MyTabs() {
       <Tab.Screen
         name="Language"
         component={Language}
-        options={{ title: t('language') }}
+        options={{ title: t('language'), tabBarLabel: t('language') }}
       />
       <Tab.Screen
         name="Profile"

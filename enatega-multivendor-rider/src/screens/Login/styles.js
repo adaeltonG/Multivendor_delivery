@@ -1,7 +1,6 @@
 import colors from '../../utilities/colors'
-import { Dimensions, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { alignment } from '../../utilities/alignment'
-const { height } = Dimensions.get('window')
 export default {
   flex: {
     flex: 1
@@ -15,8 +14,11 @@ export default {
   },
   container: {
     width: '100%',
-    alignSelf: 'center',
-    height: height * 1.2
+    alignSelf: 'center'
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 32
   },
   image: {
     alignSelf: 'center',
@@ -26,7 +28,7 @@ export default {
     ...alignment.MTmedium
   },
   innerContainer: {
-    height: height * 1,
+    minHeight: 440,
     backgroundColor: colors.themeBackground,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
@@ -38,6 +40,7 @@ export default {
     shadowOpacity: 0.58,
     shadowRadius: 13.0,
     elevation: 24,
+    paddingBottom: 36,
     ...alignment.MTlarge
   },
   signInText: {
@@ -79,13 +82,13 @@ export default {
   },
   btn: {
     width: '70%',
-    height: height * 0.06,
+    minHeight: 50,
     alignItems: 'center',
     backgroundColor: colors.black,
     color: colors.white,
     alignSelf: 'center',
     borderRadius: 10,
-    marginTop: height * 0.15
+    marginTop: 48
   },
   pt5: {
     paddingTop: 5
@@ -99,5 +102,48 @@ export default {
   },
   errorInput: {
     borderColor: colors.textErrorColor
+  },
+  dividerRow: {
+    width: '70%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 18
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#D9DEDB'
+  },
+  dividerText: {
+    color: '#65706A',
+    marginHorizontal: 12
+  },
+  googleBtn: {
+    width: '70%',
+    minHeight: 50,
+    alignSelf: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#CDD5D0',
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18
+  },
+  googleBtnText: {
+    color: '#1E2522',
+    marginLeft: 12
+  },
+  googleHint: {
+    width: '72%',
+    alignSelf: 'center',
+    color: '#65706A',
+    marginTop: 10,
+    lineHeight: 18
+  },
+  disabledBtn: {
+    opacity: 0.55
   }
 }

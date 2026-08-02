@@ -1,5 +1,5 @@
-export const riderLogin = `mutation RiderLogin($username:String,$password:String,$notificationToken:String){
-  riderLogin(username:$username,password:$password,notificationToken:$notificationToken){
+export const riderLogin = `mutation RiderLogin($username:String,$password:String,$googleIdToken:String,$notificationToken:String){
+  riderLogin(username:$username,password:$password,googleIdToken:$googleIdToken,notificationToken:$notificationToken){
     userId
     token
   }
